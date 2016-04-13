@@ -1,0 +1,76 @@
+{% extends "masterpage_staff.html" %}
+
+
+<!-- <html>
+<head>
+<title>Staff Dashboard</title>	
+</head>
+<body> -->
+{% block content %}
+  <div class="table-responsive">
+
+  <h1>Staff Search</h1>
+<form method ='POST' action=''>{%csrf_token%}
+	<div class="form-style-1">
+	{{form.as_p}}
+<input type='submit' value='Submit'>
+</div>
+
+</tr>
+</form> 
+
+
+
+{%if searchs %}
+<table class="table table-striped">
+<tr>
+<th>
+	Roll Number
+</th>	
+
+<th>
+ Admission Id
+</th>
+
+<th>
+Created On
+</th>
+
+<th>
+ status
+</th>
+
+</tr>
+{% for i in searchs %}
+<tr>
+<td>
+<a href=/studentDetailForm/{{i.admission_id}}> {{i.roll_number}}</a>
+</td>
+
+<td>
+{{i.admission_id}}
+</td>
+<td>
+{{i.created_on}}
+</td>
+{%ifequal i.status_of_request 1 %}
+    <td>Pending </td>
+{% else %}
+   <td>Incompelete </td>
+{% endifequal %}
+</tr>
+	{% endfor %} 
+</table>
+
+{% endif %}
+{%if searchs %}
+
+{%else%}
+{% if message%}
+<b>Sorry No Data Found As per your Request</b>
+{% endif %}
+{% endif %}
+</div>
+{% endblock %}
+<!-- </body>
+</html> -->

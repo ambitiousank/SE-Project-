@@ -1,0 +1,244 @@
+{% extends "masterpage_staff.html" %}
+{% load static %}
+{% block content %}
+<h1>User Details</h1>
+  <div class="table-responsive">
+  <br>
+  <h4> <b>Personal Details</b></h4>
+<table class="table table-striped">
+<tr>
+<th>Roll Number</th>
+<td>{{roll_no}}</td>
+</tr>
+<tr>
+<th>Student's Name</th>
+<td>{{personal.full_name}}</td>
+</tr>
+
+<tr>
+<th>Father's Name</th>
+<td>{{personal.father_name}}</td>
+</tr>
+
+<tr>
+<th>Mother's Name</th>
+<td>{{personal.mother_name}}</td>
+</tr>
+
+<tr>
+<th>Gender</th>
+<td>
+{%ifequal personal.gender 1%}
+Male
+{%else%}
+Female
+{%endifequal%}
+
+</td>
+</tr>
+
+
+<tr>
+<th>Date of Birth</th>
+<td>{{personal.date_of_birth}}</td>
+</tr>
+
+
+<tr>
+	<th>Email Id</th>
+	<td>{{personal.email_id}}</td>
+
+</tr>
+
+<tr>
+	<th>Nationality</th>
+	<td>{{personal.nationality}}</td>
+
+</tr>
+<tr>
+	<th>Category</th>
+	<td>{{category}}</td>
+
+</tr>
+
+<tr>
+	<th>Phone No.</th>
+	<td>{{personal.phone_number}}</td>
+
+</tr>
+
+
+<tr>
+	<th>PAN Card</th>
+	<td>{{personal.pan_card}}</td>
+
+</tr>
+
+
+
+
+
+</table>
+
+<br>
+ <h4> <b>Educational Details</b></h4>
+<table class="table table-striped">
+<tr>
+<th>Education Standard</th>
+<th>Percentage</th>
+<th>Board</th>
+<th>Institution</th>
+<th>Year of Graduation</th>
+
+</tr>
+{% for i in education_details%}
+<tr>
+	
+	{%ifequal i.education_type 1 %}
+	<td>Xth</td>
+	
+	{%else%}
+	{%ifequal i.education_type 2 %}
+	<td>XIIth</td>
+	{% else %}
+	<td>Graduation</td>
+	{% endifequal %}
+	{% endifequal %}
+
+	<td>{{i.percentage}} %</td>
+	<td>{{i.board}}</td>
+	<td>{{i.school}}</td>
+	<td>{{i.year_of_graduation}}</td>
+
+
+</tr>
+{% endfor%}	
+</table>
+<br>
+ <h4> <b>Work Experience</b></h4>
+ {% if work_ex%}
+<table class="table table-striped">
+{%for work in work_ex%}
+<tr>
+	<th>Name of Organisation</th>
+	<td>{{work.last_organisation}}</td>
+</tr>
+
+<tr>
+	<th>Position</th>
+	<td>{{work.position}}</td>
+</tr>
+
+<tr>
+	<th>Job Description</th>
+	<td>{{work.job_description}}</td>
+</tr>
+
+<tr>
+	<th>Start Year</th>
+	<td>{{work.start_year}}</td>
+</tr>
+
+<tr>
+	<th>End Year</th>
+	<td>{{work.end_year}}</td>
+</tr>
+
+<tr>
+	<th>Duration(in months)</th>
+	<td>{{work.duration}}</td>
+</tr>
+{%endfor%}
+</table>
+{%else%}
+<i>No Work Experience for this Candidate</i>
+<br>
+{%endif%}
+
+<br>
+ <h4> <b>Communication Details</b></h4>
+<table class="table table-striped">
+
+<tr>
+	<th>Address 1</th>
+	<td>{{address.address1}}</td>
+</tr>
+
+<tr>
+	<th>Address 2</th>
+	<td>{{address.address2}}</td>
+</tr>
+
+<tr>
+	<th>Address 3</th>
+	<td>{{address.address3}}</td>
+</tr>
+
+<tr>
+	<th>State</th>
+	<td>{{state}}</td>
+</tr>
+
+<tr>
+	<th>City</th>
+	<td>{{address.city}}</td>
+</tr>
+
+<tr>
+	<th>Pincode</th>
+	<td>{{address.pincode}}</td>
+</tr>
+</table>
+
+<br>
+ <h4> <b>Program Applied</b></h4>
+<table class="table table-striped">
+
+<tr>
+	<th>Program</th>
+	<td>{{program_name}}</td>
+</tr>
+<tr>
+	<th>Course Name</th>
+	<td>{{course}}</td>
+</tr>
+<tr>
+	<th>Exam Name</th>
+	<td>{{exam}}</td>
+</tr>
+	<th>Subject</th>
+	<td>{{subject}}</td>
+<tr>
+	<th>Marks Scored</th>
+	<td>{{program.marks_scored}}</td>
+</tr>
+
+</table>
+
+<br>
+ <h4> <b>Documents Uploaded</b></h4>
+<table class="table table-striped">
+{%for up in upload%}
+<tr>
+	<th>{{up.upload_type_id.upload_type_desc}}</th>
+<!-- 	<td><embed height="150%" width="100%"  name="plugin" src="{% static filename %}"  type="application/pdf"></td>
+ -->
+ <td><embed height="300px" width="100%"  name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  type="application/pdf"></td>
+ </tr>
+
+{%endfor%}
+
+
+</table>
+
+<form method ='POST' action=''>{%csrf_token%}
+	<div class="form-style-1">
+	{{form.as_p}}
+<input type='submit' value='Submit'>
+</div>
+
+</tr>
+</form> 
+
+</div>
+{% endblock %}

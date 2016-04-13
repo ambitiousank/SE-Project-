@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--{% extends "masterpage_candidate.html" %}-->
+{% load static %}
+{% block content %}
+<!--{% load url from future %}-->
+
+<div class="table-responsive">
+    <br>
+    <form method="POST" action=''>{% csrf_token %}
+        <!--<h4> <b>Educational Details</b></h4>-->
+        <table class="table table-striped">
+        <tr>
+            <th bgcolor="#e1e1e1">Education Type:</th>
+            <td bgcolor="#e1e1e1"><b>Xth</b></td>
+            {{xForm}}
+        </tr>
+        </table>
+        <table class="table table-striped">
+        <tr>
+
+            <th bgcolor="#e1e1e1">Education Type:</th>
+            <td bgcolor="#e1e1e1"><b>XIIth</b></td>
+            {{xiiForm}}
+        </tr>
+        </table>
+        <table class="table table-striped">
+        <tr>
+
+            <th bgcolor="#e1e1e1">Education Type:</th>
+            <td bgcolor="#e1e1e1"><b>Graduation</b></td>
+            {{grForm}}
+
+        </tr>
+        </table>
+
+        </br>
+        <input type = 'submit' value = 'Save'>
+
+    </form>
+
+</div>
+<!--
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="/home/{{roll_number}}">Home</a></li>
+                <li><a href="/candidate_personal_details/{{roll_number}}">Personal Details</a></li>
+                <li><a href="/candidate_academic_details/{{roll_number}}">Educational Details</a></li>
+                <li><a href="/candidate_work_experience/{{roll_number}}">Work Experience</a></li>
+                <li><a href="/candidate_communication_details/{{roll_number}}">Address Details</a></li>
+                {%ifequal adminRef.offer_id 1%}
+                <li><a href="/candidate_program_details/{{roll_number}}">Apply For a Program</a></li>
+                {%else%}
+                <li><a href="/candidate_job_details/{{roll_number}}">Apply For a Post</a></li>
+                {%endifequal%}
+                <li><a href="/candidate_upload_files/{{roll_number}}">Upload Files</a></li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+-->
+
+</html>
+{%endblock%}

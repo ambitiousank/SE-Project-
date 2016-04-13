@@ -1,0 +1,58 @@
+{% extends "masterpage_staff.html" %}
+
+
+<!-- <html>
+<head>
+<title>Staff Dashboard</title>	
+</head>
+<body> -->
+{% block content %}
+  <div class="table-responsive">
+<h1>Staff Dashboard</h1>
+{%if Students %}
+<table class="table table-striped">
+<tr>
+<th>
+	Roll Number
+</th>	
+
+<th>
+ Admission Id
+</th>
+
+<th>
+Created On
+</th>
+
+<th>
+ status
+</th>
+
+</tr>
+{% for i in Students %}
+<tr>
+<td>
+<a href=/studentDetailForm/{{i.admission_id}}> {{i.roll_number}}</a>
+</td>
+
+<td>
+{{i.admission_id}}
+</td>
+<td>
+{{i.created_on}}
+</td>
+{%ifequal i.status_of_request 1 %}
+    <td>Pending </td>
+{% else %}
+   <td>Incompelete </td>
+{% endifequal %}
+</tr>
+	{% endfor %} 
+</table>
+{%else %}
+No Data Found
+{% endif %}
+</div>
+{% endblock %}
+<!-- </body>
+</html> -->

@@ -1,0 +1,34 @@
+{% load staticfiles %}
+
+<center>
+<div style="border: 3px solid; width:500px;">
+
+<h1><i>{{ title }}</i></h1>
+<!--{{ user }}
+{{ request.user }} -->
+
+
+<form method='POST' action=''>{% csrf_token %}  
+
+<h2>Personal Details:</h2>
+{{ form1.as_p}}
+
+<h2>Address Details:</h2>
+{{ form2.as_p }}
+
+<h2>Educational Details:</h2>
+{{ form3.as_p }}
+
+<h2>Program Applied:</h2>
+{{ form4.as_p }}
+
+<h2>Work Experience:</h2>
+{{ form5.as_p }}
+
+<input type='submit' value='Register' disabled />   <!--on click, POST method sends data to the view-->
+
+
+</form>
+</div>
+</center>
+

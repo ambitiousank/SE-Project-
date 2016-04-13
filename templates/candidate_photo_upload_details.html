@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--{% extends "masterpage_candidate.html" %}-->
+{% load static %}
+{% block content %}
+<!--{% load url from future%}-->
+
+<div class="table-responsive">
+    <br>
+    <form method="POST" action=''>{% csrf_token %}
+        <!--<h4 color="#e1e1e1"> <b>Work Experience</b></h4>-->
+        <table class="table table-striped">
+            <tr>
+                <th bgcolor="#e1e1e1"> Photograph Upload</th><td bgcolor="#e1e1e1"></td>
+               <!--<div id='roll_number' class="hidden">{{roll_number}}</div>-->
+
+                {{phForm}}
+                <!--{{address}}-->
+            </tr>
+        </table>
+        <input type= "hidden" name='roll_number' value="{{roll_number}}" />
+        </br>
+        <input type = 'submit' value = 'Save'>
+    </form>
+</div>
+</html>
+{%endblock%}

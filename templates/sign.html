@@ -1,0 +1,18 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'module1/style.css' %}" />
+
+
+<h1>{{ title }}</h1>
+<h2><center>New User Registration</center></h2>
+<!--{{ user }}
+{{ request.user }} -->
+
+<div class="login-card">
+<form method='POST' action=''>{% csrf_token %}   <!--GET when using a webpage for dat, POST when sending some data-->
+
+{{ form.as_p}}
+
+<input type='submit' value='Sign Up'/>   <!--on click, POST method sends data to the view-->
+
+</form>
+</div>
