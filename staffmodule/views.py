@@ -126,8 +126,29 @@ def staffSearch(request):
 	message=False
 	if form.is_valid():
 		k= request.POST['value']
+		m= request.POST['Action']
+		r=0
 		message=True
-		search = AdmissionDetail.objects.filter(roll_number=k)
+		a="1"
+		l=int(m)
+		print m
+		if l==1:
+			print "-----here"
+			search = AdmissionDetail.objects.filter(roll_number=k)
+		elif l==2:
+			temp = PersonalDetail.objects.filter(full_name__icontains=k)
+			for x in temp:
+				print x.roll_number
+				r=x.roll_number
+				s = AdmissionDetail.objects.filter(roll_number=r)
+				for sd in s:
+					search.append(sd)
+
+
+
+				
+		
+
 
 	vo={
 	"searchs":search,
