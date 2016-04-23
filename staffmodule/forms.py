@@ -12,6 +12,7 @@ ValidationResult = (
 
 SearchCriteria= (  
     (1,'RollNumber' ),
+    (2,'Name'),
     
     
    
