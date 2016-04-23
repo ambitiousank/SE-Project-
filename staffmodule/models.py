@@ -241,21 +241,11 @@ class XthMarksheets (models.Model):
 
 class UploadDetails(models.Model):
 
-    FILE_CHOICES=((1, 'Photograph'),
-                  (2, 'Signature'),
-                  (3, 'Xth Marksheet'),
-                  (4, 'Xth Certificate'),
-                  (5, 'XIIth Marksheet'),
-                  (6, 'XIIth Certificate'),
-                  (7, 'Graduation Marksheet'),
-                  (8, 'Graduation Certificate'),
-                  (9, 'Gate Score Card'),
-                  (10, 'Salary Slip'))
-
+    
 
     upload_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
-    upload_type_id=models.ForeignKey(UploadTypeRef, choices=FILE_CHOICES)
+    upload_type_id=models.ForeignKey(UploadTypeRef)
     upload_path=models.CharField(max_length=100)
 
 ###New class
