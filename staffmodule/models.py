@@ -192,7 +192,7 @@ class PostApplied(models.Model):
 
     post_applied_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
-    post=models.IntegerField(choices=POST_CHOICES,default=0)
+    post=models.ForeignKey(PostRef)
 
 
 

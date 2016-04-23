@@ -191,29 +191,43 @@ Female
 </table>
 
 <br>
+{% if program%}
  <h4> <b>Program Applied</b></h4>
 <table class="table table-striped">
 
 <tr>
 	<th>Program</th>
-	<td>{{program_name}}</td>
+	<td>{{program_name.program_desc}}</td>
 </tr>
 <tr>
 	<th>Course Name</th>
-	<td>{{course}}</td>
+	<td>{{course.course_desc}}</td>
 </tr>
 <tr>
 	<th>Exam Name</th>
 	<td>{{exam}}</td>
 </tr>
 	<th>Subject</th>
-	<td>{{subject}}</td>
+	<td>{{subject.exam_subject_desc}}</td>
 <tr>
 	<th>Marks Scored</th>
 	<td>{{program.marks_scored}}</td>
 </tr>
 
 </table>
+{%endif%}
+{% if post%}
+ <h4> <b>Position Applied</b></h4>
+<table class="table table-striped">
+
+<tr>
+	<th>Position Applied</th>
+	<td>{{post.post.post_desc}}</td>
+</tr>
+
+
+</table>
+{%endif%}
 
 <br>
  <h4> <b>Documents Uploaded</b></h4>

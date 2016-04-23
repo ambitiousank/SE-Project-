@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db import models
-from .models import AdmissionDetail,PersonalDetail,EducationDetails,AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef,ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails
+from .models import AdmissionDetail,PersonalDetail,EducationDetails,AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef,ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails,AdminReference,PostApplied
 from .forms import validationForm,validationForm2
 from django.http import HttpResponsePermanentRedirect
 
@@ -53,15 +53,33 @@ def studentValidation(request,admission_id):
 	
 	education_details=EducationDetails.objects.filter(roll_number=roll_number)
 	work_experience=WorkExperience.objects.filter(roll_number=roll_number)
+	master_ref=AdminReference.objects.get(reference_id=1)
+	master_decesion=master_ref.offer_id
 
 	address=AddressDetails.objects.get(address_id=student_entry.current_address_id)
-	program=ProgramApplied.objects.get(roll_number=roll_number)
-	exam=ExamRef.objects.get(exam_id=program.exam_name_id)
-	course=CourseRef.objects.get(course_id=program.course_id)
-	subject=ExamSubjectRef.objects.get(exam_subject_id=program.exam_subject_id)
+	program=None
+	post=None
+	exam=None
+	course=None
+	subject=None
+	program_name=None
+	exam_desc=None
+	if master_decesion==1:
+		program=ProgramApplied.objects.get(roll_number=roll_number)
+		exam=ExamRef.objects.get(exam_id=program.exam_name_id)
+		course=CourseRef.objects.get(course_id=program.course_id)
+		subject=ExamSubjectRef.objects.get(exam_subject_id=program.exam_subject_id)
+		program_name=ProgramRef.objects.get(program_id=program.program_id)
+		exam_desc=exam.exam_desc
+	else:
+		post=PostApplied.objects.get(roll_number=roll_number)
+
+
+	
+	
 	category=CategoryRef.objects.get(category_id=student_entry.category_id)
 	state=StateRef.objects.get(state_id=address.state)
-	program_name=ProgramRef.objects.get(program_id=program.program_id)
+	
 	upload=UploadDetails.objects.filter(roll_number=roll_number)
 
 	for k in upload:
@@ -82,12 +100,13 @@ def studentValidation(request,admission_id):
 	"address":address,
 	"work_ex":work_experience,
 	"program":program,
-	"exam":exam.exam_desc,
-	"course":course.course_desc,
-	"subject":subject.exam_subject_desc,
+	"post":post,
+	"exam":exam_desc,
+	"course":course,
+	"subject":subject,
 	"category":category.category_desc,
 	"state":state.state_desc,
-	"program_name":program_name.program_desc,
+	"program_name":program_name,
 	"filename":"downloads/k2.pdf",
 	"filename2":"downloads/MT2015020_HIghSchool.pdf",
 	"upload":upload
