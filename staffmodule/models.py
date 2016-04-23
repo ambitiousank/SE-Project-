@@ -117,6 +117,8 @@ class PersonalDetail(models.Model):
     phone_number=models.CharField(max_length=10)
     pan_card=models.CharField(max_length=32,blank=True)
     email_id=models.EmailField()
+    residential_address_id=models.IntegerField(default=0)
+    current_address_id=models.IntegerField(default=0)
 
 
 

@@ -68,6 +68,7 @@ def studentValidation(request,admission_id):
 		print k.upload_path
 		print k.upload_type_id
 		print k.upload_type_id.upload_type_desc
+		#nothing
 
 
 
