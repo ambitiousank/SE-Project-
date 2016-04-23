@@ -245,7 +245,7 @@ class UploadDetails(models.Model):
 
     upload_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
-    upload_type_id=models.ForeignKey(UploadTypeRef)
+    upload_type=models.ForeignKey(UploadTypeRef)
     upload_path=models.CharField(max_length=100)
 
 ###New class
