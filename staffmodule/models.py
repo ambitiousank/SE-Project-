@@ -250,12 +250,12 @@ class UploadDetails(models.Model):
 
 ###New class
 class AdminReference(models.Model):
-    offer_choice=(
-        (1, "admission"),
-        (2, "job")
+    template_choice=(
+        (1, "Admission"),
+        (2, "Job")
     )
     reference_id=models.PositiveSmallIntegerField(primary_key=True,default=1)
-    offer_id=models.PositiveSmallIntegerField(choices=offer_choice,default="admission")
+    form_template=models.PositiveSmallIntegerField(choices=template_choice,default=1)
     created_by=models.CharField(max_length=32)
     created_on=models.DateField(auto_now_add=True)
     form_submission_date=models.DateField()

@@ -54,8 +54,7 @@ def studentValidation(request,admission_id):
 	education_details=EducationDetails.objects.filter(roll_number=roll_number)
 	work_experience=WorkExperience.objects.filter(roll_number=roll_number)
 	master_ref=AdminReference.objects.get(reference_id=1)
-	master_decesion=master_ref.offer_id
-
+	master_decesion=master_ref.form_template
 	address=AddressDetails.objects.get(address_id=student_entry.current_address_id)
 	program=None
 	post=None

@@ -29,10 +29,10 @@ urlpatterns = [
 	url(r'^submitComments/$','staffmodule.views.submitComments',name='submitComments'),
 	url(r'^staff_search/$','staffmodule.views.staffSearch',name='staffSearch'),
 
-
+	url(r'^admin_module/', 'adminmodule.views.main', name="main"),
 	url(r'^userAdmin1/$','adminmodule.views.formTemplate1',name='formTemplate1'),
 	url(r'^userAdmin2/$','adminmodule.views.formTemplate2',name='formTemplate2'),
-	url(r'^admin_module/', 'adminmodule.views.main', name="main"),
+	url(r'^admin_req/', 'adminmodule.views.users', name="users"),
 	url(r'^templates/', 'adminmodule.views.template', name="template"),
 
 

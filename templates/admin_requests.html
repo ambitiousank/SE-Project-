@@ -1,0 +1,45 @@
+{% extends "masterpage_admin.html" %}
+
+{% block content %}
+
+          <h1 class="sub-header">User Requests</h1>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Email Status</th>
+                  <th>Request</th>
+                </tr>
+              </thead>
+              <tbody>
+
+               {% for item in all_entries %}
+                <tr> 
+                <td>{{ item.name }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.role }}</td>
+                <td>{{ item.match }}</td>
+                <td>
+                  <form method ='POST' action=''>{%csrf_token%}
+                  {{form.as_p}}
+                  </form>
+
+                </td>
+                <!--<td><form method='POST' action=''>{% csrf_token %}
+                  <input type="radio" name="status" value="1"> Approve &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                   <input type="radio" name="status" value="2"> Decline 
+                  </form>   
+                </td>   -->
+                </tr>
+              
+               {% endfor %} 
+              </tbody>
+            </table>
+            <form method='POST' action=''>{% csrf_token %} <input type="submit" value="Save"> </form>
+          </div>
+
+          {% endblock %}
+        

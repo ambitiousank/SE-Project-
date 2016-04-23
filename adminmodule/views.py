@@ -1,33 +1,65 @@
 from django.shortcuts import render
-from .forms import PersonForm, EducationForm, AddressForm, ProgramForm, WorkForm, PostForm
-from module1.models import SignUp
+from .forms import PersonForm, EducationForm, AddressForm, ProgramForm, WorkForm, PostForm, validationForm, adminForm
+from module1.models import SignUp, MatchRef
 
 # Create your views here.
 def main(request):
 	
-	all_entries = SignUp.objects.all()
-	name=[p.name for p in all_entries]
-	email=[p.email for p in all_entries]
-	role=[p.role for p in all_entries]
+	form = adminForm(request.POST or None) 
 
-	if request.method == 'POST':
-		approve = request.POST.getlist('status','')
-		print approve	 
-
+	if form.is_valid():
+		instance=form.save(commit=False)
+		instance.save()
 
 	context ={
-		"all_entries":all_entries   
+		"form":form   
 	}
 
 	return render(request,"admin_page.html",context)
 
+
 def template(request):
 	
 	return render(request,"admin_templates.html",{})
+
+def users(request):
+
+	all_entries = SignUp.objects.all()
+	name=[p.name for p in all_entries]
+	email=[p.email for p in all_entries]
+	role=[p.role for p in all_entries]
+	form = validationForm(request.POST or None) 
+
+	for p in all_entries:
+		check= MatchRef.objects.filter(email=p.email)
+		if not check:
+			p.match="Unmatched"
+		else:
+			p.match="Matched"
+		p.save()
+
+
+	all_entries = SignUp.objects.all()
+	
+	if request.method == 'POST':
+		print "valid"
+		k= request.POST.getlist('Action')
+		c= request.POST.getlist('Comments')
+		print k
+		all_entries.update(approve=k)
+		#return render(request,"staff","")
+
+
+	context ={
+		"all_entries":all_entries,
+		"form":form   
+	}
+	
+	return render(request,"admin_requests.html",context)
 	
 
 def formTemplate1(request):
-	title= "User Registration"
+	title= "User Registration: Admission Template"
 
 	#adding a form
 	
@@ -76,7 +108,7 @@ def formTemplate1(request):
 
 
 def formTemplate2(request):
-	title= "User Registration"
+	title= "User Registration: Job Template"
 
 	#adding a form
 	
