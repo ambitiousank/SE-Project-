@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--{% extends "masterpage_candidate.html" %}-->
+{% load static %}
+{% block content %}
+<!--{% load url from future%}-->
+
+<div class="table-responsive">
+    <br>
+
+    <!--<h4 color="#e1e1e1"> <b>Work Experience</b></h4>-->
+    <table class="table table-striped">
+        <tr>
+            <th bgcolor="#e1e1e1"> Educational Details</th><td bgcolor="#e1e1e1"></td>
+        <tr>
+            <td><li><a href="/candidate_academic_details/1/{{roll_number}}">Xth Details</a></li></td>
+        </tr>
+        <tr>
+            <td><li><a href="/candidate_academic_details/2/{{roll_number}}">XIIth Details</a></li></td>
+        </tr>
+        <td><li><a href="/candidate_academic_details/3/{{roll_number}}">Graduation Details</a></li></td>
+        </tr>
+
+        </tr>
+    </table>
+    <!--<input type= "hidden" name='roll_number' value="{{roll_number}}" />-->
+
+</div>
+
+
+</div>
+</html>
+{%endblock%}

@@ -1,26 +1,31 @@
 from django.shortcuts import render
 from django.db import transaction
 from django import forms
-from .forms import PersonalDetailForm,\
-    EducationalDetailForm, WorkExperienceForm,AddressDetailForm,ProgramDetailForm,JobDetailForm,\
-    PhotoUploadForm,SigUploadForm,XmUploadForm
-from django.http import HttpResponseRedirect
+from .forms import PersonalDetailForm, \
+    EducationalDetailForm, WorkExperienceForm,AddressDetailForm,ProgramDetailForm,JobDetailForm, \
+    FileUploadForm,FormSubmissionForm#,PhotoUploadForm
+from django.http import HttpResponsePermanentRedirect
+from django.core.exceptions import ObjectDoesNotExist
 
 #from .models import User
 from staffmodule.models import AdmissionDetail,PersonalDetail,EducationDetails, \
     AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef, \
-    ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails,\
-    AdminReference,PostApplied,PhotoFiles,SignatureFiles,XthMarksheets
+    ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails, \
+    AdminReference,PostApplied,User,SubmitStatus
 
 
 # Create your views here.
 
 
 # here we have to validate roll_number of a user in the url as well only then we'll allow access
+try:
+    admin_ref =AdminReference.objects.get(reference_id=1)
+    offer_id=admin_ref.offer_id
+except ObjectDoesNotExist:
+    offer_id =1
 
-#admin_ref =AdminReference.objects.get(reference_id=1)
 
-admin_ref =1
+
 
 
 """
@@ -30,418 +35,286 @@ html page. A candidate can verify how his/her information will look once the for
 
 """
 def homeView(request, roll_number):
+    title="Candidate Details "
+    context={"title":title,"roll_number": roll_number}
 
     PERMANENT_ADDRESS_TYPE=0
     CURRENT_ADDRESS_TYPE=1
+    try:
+        try:
+            personal_details = PersonalDetail.objects.get(roll_number=roll_number.upper())
+        except ObjectDoesNotExist:
+            personal_details=PersonalDetail.objects.get(roll_number=roll_number.lower())
+        context.update({"personal":personal_details})
+    except ObjectDoesNotExist:
+        pass
+    else:
+        try:
+            category_details= CategoryRef.objects.get(category_id =personal_details.category_id)
+            category=category_details.category_desc
+            context.update({"category":category})
+        except ObjectDoesNotExist:
+            pass
+        try:
+            educational_details=EducationDetails.objects.filter(roll_number=roll_number)
+            context.update({"education_details":educational_details})
+        except ObjectDoesNotExist:
+            pass
+        try:
+            permanentAddress=AddressDetails.objects.get(roll_number=roll_number,address_type=PERMANENT_ADDRESS_TYPE)
+            context.update({"permanent_address":permanentAddress})
+        except ObjectDoesNotExist:
+            pass
+        try:
+            currentAddress=AddressDetails.objects.get(roll_number=roll_number,address_type=CURRENT_ADDRESS_TYPE)
+            context.update({"current_address":currentAddress})
+        except ObjectDoesNotExist:
+            pass
+        work_experience=WorkExperience.objects.filter(roll_number=roll_number)
 
-    personal_details = PersonalDetail.objects.get(roll_number=roll_number)
-    category_details= CategoryRef.objects.get(category_id = personal_details.category_id)
-    educational_details=EducationDetails.objects.filter(roll_number=roll_number)
-    permanentAddress=AddressDetails.objects.get(roll_number=roll_number,address_type=PERMANENT_ADDRESS_TYPE)
-    currentAddress=AddressDetails.objects.get(roll_number=roll_number,address_type=CURRENT_ADDRESS_TYPE)
-    work_experience=WorkExperience.objects.filter(roll_number=roll_number)
+        context.update({"work_ex":work_experience})
 
     #if institute is offering admission
-    if admin_ref.offer_id==1:
-        program_applied=ProgramApplied.objects.get(roll_number=roll_number)
-        program=ProgramRef.objects.get(program_id=program_applied.program_id)
-        exam_details=ExamRef.objects.get(exam_id=program_applied.exam_name_id)
-        exam_subject_details=ExamSubjectRef.objects.get(exam_subject_id=program_applied.exam_subject_id)
-        course_details=CourseRef.objects.get(course_id=program_applied.course_id)
-        context= {
-            "program":program_applied,
-            "exam":exam_details.exam_desc,
-            "course":course_details.course_desc,
-            "subject":exam_subject_details.exam_subject_desc,
-            "program_name":program.program_desc,
-        }
+    if offer_id==1:
+        try:
+            program_applied=ProgramApplied.objects.get(roll_number=roll_number)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            program=ProgramRef.objects.get(program_id=program_applied.program_id)
+            exam_details=ExamRef.objects.get(exam_id=program_applied.exam_name_id)
+            exam_subject_details=ExamSubjectRef.objects.get(exam_subject_id=program_applied.exam_subject_id)
+            course_details=CourseRef.objects.get(course_id=program_applied.course_id)
+            exam=exam_details.exam_desc
+            course=course_details.course_desc
+            subject=exam_subject_details.exam_subject_desc
+            program_name=program.program_desc
+
+
+            context.update({
+                "program":program_applied,
+                "exam":exam,
+                "course":course,
+                "subject":subject,
+                "program_name":program_name,
+            })
 
     #if institute is offering a job
-    elif admin_ref.offer_id==2:
-         post=PostApplied.objects.get(roll_number=roll_number)
-         context= {"post":post}
+    elif offer_id==2:
+        try:
+            post=PostApplied.objects.get(roll_number=roll_number)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            context.update({"post":post})
+
+
+    upload=UploadDetails.objects.filter(roll_number=roll_number)
+    for k in upload:
+        path,filename=k.upload_path.name.split('/media/')
+        k.upload_path=filename
+        print k.upload_type
+	    #print k.upload_type.upload_type_desc
+
+
+
+
 
     context.update({
-        "roll_number": roll_number,
-        "personal":personal_details,
         #"form":form,
-        "education_details":educational_details,
-        "permanent_address":permanentAddress,
-        "current_address":currentAddress,
-        "work_ex":work_experience,
-        "category":category_details.category_desc,
-        "adminRef":admin_ref,
-        #"filename":"downloads/k2.pdf",
-        #"filename2":"downloads/MT2015020_HIghinstitute.pdf",
-        #"upload":upload
-        })
-    return render (request, "home.html",context)
+        "offer_id":offer_id,
+        "filename":"/xth_"+roll_number+".pdf",
+        "filename2":"/photo_"+roll_number+".jpg",
+        "upload":upload
+    })
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
+
+    if submission_status ==1:
+         return render (request,"candidate_form_disabled.html",context)
+
+    return render (request, "candidate_home.html",context)
 
 
 def fileUploadView(request,roll_number):
+
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
+
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+
     title= "File Upload List"
     context={
         "title" : title,
-        "roll_number" : roll_number
+        "roll_number" : roll_number,
+        "offer_id":offer_id
     }
 
-    return render(request, "candidate_file_upload_details.html",  context)
+    return render(request, "candidate_upload_file_list.html",  context)
 
 
-def photoUploadView(request, roll_number):
+def fileDetailsView(request,upload_doc,roll_number):
 
-      title= "Photograph Upload Details"
-      photoEntries=PhotoFiles.objects.filter(roll_number=roll_number,)
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
 
-      if photoEntries:
-        for pe in photoEntries:
-            ph=pe.photograph_file
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/",{"submitted":"submitted"})
 
         phForm=PhotoUploadForm(request.POST or None, initial={"photograph_file":ph})
       else:
         phForm=PhotoUploadForm(request.POST or None)
 
-      context={
+    print "<<<<<<fileDetails--request.POST>>>"
+    print request.POST
+
+    if upload_doc=="photo":
+        uploaded_doc='Photograph'
+        upload_type=1
+
+    elif upload_doc=="sign":
+        uploaded_doc='Signature'
+        upload_type=2
+
+    elif upload_doc=="xm":
+        uploaded_doc='Xth Marksheet'
+        upload_type=3
+
+    elif upload_doc=="xc":
+        uploaded_doc='Xth Certificate'
+        upload_type=4
+
+    elif upload_doc=="xiim":
+        uploaded_doc='XIIth Marksheet'
+        upload_type=5
+
+    elif upload_doc=="xiic":
+        uploaded_doc='XIIth Certificate'
+        upload_type=6
+
+    elif upload_doc=="gm":
+        uploaded_doc='Graduation Marksheet'
+        upload_type=7
+
+    elif upload_doc=="gc":
+        uploaded_doc='Graduation Certificate'
+        upload_type=8
+
+    elif upload_doc=="sc":
+        uploaded_doc='Gate Score Card'
+        upload_type=9
+
+    elif upload_doc=="ss":
+        uploaded_doc='Salary Slip'
+        upload_type=10
+
+    else:
+        uploaded_doc=''
+        upload_type=0
+
+    title= uploaded_doc+" Upload Details"
+
+    if request.POST:
+        ufForm=FileUploadForm(request.POST,request.FILES)
+    else:
+        ufForm=FileUploadForm(request.POST or None)
+
+    if ufForm.is_valid():
+
+        try:
+            fileEntry=UploadDetails.objects.get(roll_number=roll_number, upload_type=upload_type)
+            upload_path = request.FILES["upload_path"]
+            fileEntry.upload_path=upload_path
+            print "<<<<fileEntry:::PK>>>>"
+            print fileEntry._get_pk_val()
+            fileEntry.save(force_update=True,update_fields=["upload_path"])
+
+        except ObjectDoesNotExist:
+            uf=UploadDetails(roll_number=roll_number,upload_path = request.FILES["upload_path"],upload_type=upload_type)
+            uf.save()
+
+
+
+    context={
         "title" : title,
-        "phForm" :phForm,
+        "ufForm" :ufForm,
         "roll_number": roll_number,
-        "adminRef":admin_ref
-      }
-      print ">>>before valid "
-      print request.POST
-      if phForm.is_valid():
+        "upload_type":upload_type,
+        "offer_id":offer_id
+    }
+    print ">>>before valid "
+    print request.POST
 
-        print "hello in phFormsView"
-        req=request.POST
-        print req
-        ph=req.getlist('photograph_file')[0]
-
-        if photoEntries:
-
-            photoEntries.update(photograph_file=ph,roll_number=roll_number)
-        else:
-            instance= phForm.save(commit=False)
-            instance.roll_number= roll_number
-            instance.photograph_file=ph
-
-            instance.save()
-
-        transaction.commit()
-
-      return render(request, "candidate_photo_upload_details.html",  context)
-
-
-def signUploadView(request, roll_number):
-      title= "Document Upload Details"
-      signEntries=SignatureFiles.objects.filter(roll_number=roll_number,)
-
-      if signEntries:
-        for se in signEntries:
-            si=se.signature_file
-
-        signForm=SigUploadForm(request.POST or None, initial={"signature_file":si})
-      else:
-        signForm=SigUploadForm(request.POST or None)
-
-      context={
-        "title" : title,
-        "signForm" :signForm,
-        "roll_number": roll_number,
-        "adminRef":admin_ref
-      }
-
-      if signForm.is_valid():
-        req=request.POST
-        print req
-        ph=req.getlist('signature_file')[0]
-
-        if signEntries:
-            signEntries.update(photograph_file=ph,roll_number=roll_number)
-        else:
-            instance= signForm.save(commit=False)
-            instance.roll_number= roll_number
-            instance.photograph_file=ph
-
-            instance.save()
-
-        transaction.commit()
-        return render(request, "candidate_file_upload_details.html", context)
-
-def xmUploadView(request, roll_number):
-      title= "Document Upload Details"
-      xmEntries=XthMarksheets.objects.filter(roll_number=roll_number,)
-
-      if xmEntries:
-        for xe in xmEntries:
-            xm=xe.xth_marksheet
-
-        xmForm=XmUploadForm(request.POST or None, initial={"xth_marksheet":xm})
-      else:
-        xmForm=XmUploadForm(request.POST or None)
-
-      context={
-        "title" : title,
-        "xmForm" :xmForm,
-        "roll_number": roll_number,
-        "adminRef":admin_ref
-      }
-
-      if xmForm.is_valid():
-        req=request.POST
-        print req
-        xm=req.getlist('xth_marksheet')[0]
+    transaction.commit()
+    return render(request, "candidate_file_details.html",  context)
 
         if xmEntries:
 
-            xmEntries.update(xth_marksheet=xm,roll_number=roll_number)
-        else:
-            instance= xmForm.save(commit=False)
-            instance.roll_number= roll_number
-            instance.xth_marksheet=xm
+def submitView(request, roll_number):
+    try:
+        subStatus = SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status = subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
 
-            instance.save()
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+
+    title = "Submission Form"
+    subForm=FormSubmissionForm(request.POST or None)
+
+    context={
+        "title" : title,
+        "subForm" :subForm,
+        "roll_number": roll_number,
+        "offer_id":offer_id
+    }
+
+    print "<<<<<submit request>>>>>"
+    print request.POST
+    if subForm.is_valid():
+
+        print "<<<<<Valid submit request>>>>>"
+        print request.POST
+
+        ss=SubmitStatus.objects.filter(roll_number=roll_number)
+        print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        print SubmitStatus._meta.get_fields(include_parents=True,include_hidden=True,)
+        if ss:
+            ss.roll_number=roll_number
+            ss.submission_status=1
+            ss.save(force_update=True)
+        else:
+            ss=SubmitStatus(roll_number=roll_number, submission_status=1)
+            ss.save(force_insert=True)
+            print "<<<<<Valid submit request:::SAVED_USER>>>>>"
+            print ss.pk
 
         transaction.commit()
-        return render(request, "candidate_file_upload_details.html", context)
-
-# def xcUploadView(request, roll_number):
-#       title= "Document Upload Details"
-#       xcEntries=UploadedFiles.objects.filter(roll_number=roll_number,)
-#
-#       if xcEntries:
-#         for pe in xcEntries:
-#             ph=pe.photograph_file
-#
-#         phForm=PhotoUploadForm(request.POST or None, innitial={"photograph_file":ph})
-#       else:
-#         phForm=PhotoUploadForm(request.POST or None)
-#
-#       context={
-#         "title" : title,
-#         "phForm" :phForm,
-#         "roll_number": roll_number,
-#         "adminRef":admin_ref
-#       }
-#
-#       if phForm.is_valid():
-#         req=request.POST
-#         print req
-#         ph=req.getlist('photograph_file')[0]
-#
-#         if xcEntries:
-#
-#             xcEntries.update(photograph_file=ph,roll_number=roll_number)
-#         else:
-#             instance= phForm.save(commit=False)
-#             instance.roll_number= roll_number
-#             instance.photograph_file=ph
-#
-#             instance.save()
-#
-#         transaction.commit()
-#         return render(request, "candidate_file_upload_details.html", context)
-#
-# def photoUploadView(request, roll_number):
-#       title= "Document Upload Details"
-#       photoEntries=UploadedFiles.objects.filter(roll_number=roll_number,)
-#
-#       if photoEntries:
-#         for pe in photoEntries:
-#             ph=pe.photograph_file
-#
-#         phForm=PhotoUploadForm(request.POST or None, innitial={"photograph_file":ph})
-#       else:
-#         phForm=PhotoUploadForm(request.POST or None)
-#
-#       context={
-#         "title" : title,
-#         "phForm" :phForm,
-#         "roll_number": roll_number,
-#         "adminRef":admin_ref
-#       }
-#
-#       if phForm.is_valid():
-#         req=request.POST
-#         print req
-#         ph=req.getlist('photograph_file')[0]
-#
-#         if photoEntries:
-#
-#             photoEntries.update(photograph_file=ph,roll_number=roll_number)
-#         else:
-#             instance= phForm.save(commit=False)
-#             instance.roll_number= roll_number
-#             instance.photograph_file=ph
-#
-#             instance.save()
-#
-#         transaction.commit()
-#         return render(request, "candidate_file_upload_details.html", context)
-#
-# def photoUploadView(request, roll_number):
-#       title= "Document Upload Details"
-#       photoEntries=UploadedFiles.objects.filter(roll_number=roll_number,)
-#
-#       if photoEntries:
-#         for pe in photoEntries:
-#             ph=pe.photograph_file
-#
-#         phForm=PhotoUploadForm(request.POST or None, innitial={"photograph_file":ph})
-#       else:
-#         phForm=PhotoUploadForm(request.POST or None)
-#
-#       context={
-#         "title" : title,
-#         "phForm" :phForm,
-#         "roll_number": roll_number,
-#         "adminRef":admin_ref
-#       }
-#
-#       if phForm.is_valid():
-#         req=request.POST
-#         print req
-#         ph=req.getlist('photograph_file')[0]
-#
-#         if photoEntries:
-#
-#             photoEntries.update(photograph_file=ph,roll_number=roll_number)
-#         else:
-#             instance= phForm.save(commit=False)
-#             instance.roll_number= roll_number
-#             instance.photograph_file=ph
-#
-#             instance.save()
-#
-#         transaction.commit()
-#         return render(request, "candidate_file_upload_details.html", context)
-#
-# def photoUploadView(request, roll_number):
-#       title= "Document Upload Details"
-#       photoEntries=UploadedFiles.objects.filter(roll_number=roll_number,)
-#
-#       if photoEntries:
-#         for pe in photoEntries:
-#             ph=pe.photograph_file
-#
-#         phForm=PhotoUploadForm(request.POST or None, innitial={"photograph_file":ph})
-#       else:
-#         phForm=PhotoUploadForm(request.POST or None)
-#
-#       context={
-#         "title" : title,
-#         "phForm" :phForm,
-#         "roll_number": roll_number,
-#         "adminRef":admin_ref
-#       }
-#
-#       if phForm.is_valid():
-#         req=request.POST
-#         print req
-#         ph=req.getlist('photograph_file')[0]
-#
-#         if photoEntries:
-#
-#             photoEntries.update(photograph_file=ph,roll_number=roll_number)
-#         else:
-#             instance= phForm.save(commit=False)
-#             instance.roll_number= roll_number
-#             instance.photograph_file=ph
-#
-#             instance.save()
-#
-#         transaction.commit()
-#         return render(request, "candidate_file_upload_details.html", context)
-#
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    return render(request, "candidate_submit.html", context)
 
 
-# def fileUploadView(request, roll_number):
-#     PHOTO=1
-#     SIGN=2
-#     X_MARKSHEET=3
-#     X_CERTIFICATE=4
-#     XII_MARKSHEET=5
-#     XII_CERTIFICATE=6
-#     GRAD_MARKSHEET=7
-#     GRAD_CERTIFICATE=8
-#
-#     title= "Document Upload Details"
-#     photoEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=PHOTO)
-#     signEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=SIGN)
-#     xmEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=X_MARKSHEET)
-#     xcEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=X_CERTIFICATE)
-#     xiimEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=XII_MARKSHEET)
-#     xiicEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=XII_CERTIFICATE)
-#     gmEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=GRAD_MARKSHEET)
-#     gcEntry=UploadDetails.objects.filter(roll_number=roll_number, upload_type_id=GRAD_CERTIFICATE)
-#
-#     photoForm=initiateUploadForm(request, roll_number, PHOTO, photoEntry)
-#     signForm=initiateUploadForm(request, roll_number, SIGN, signEntry)
-#     xmForm=initiateUploadForm(request, roll_number, X_MARKSHEET, xmEntry)
-#     xcForm=initiateUploadForm(request, roll_number, X_CERTIFICATE, xcEntry)
-#     xiimForm=initiateUploadForm(request, roll_number, XII_MARKSHEET, xiimEntry)
-#     xiicForm=initiateUploadForm(request, roll_number, XII_CERTIFICATE, xiicEntry)
-#     gmForm=initiateUploadForm(request, roll_number, GRAD_MARKSHEET, gmEntry)
-#     gcForm=initiateUploadForm(request, roll_number, GRAD_CERTIFICATE, gcEntry)
-#
-#     context={
-#         "title" : title,
-#         "photoForm":photoForm,
-#         "signForm":signForm,
-#         "xmForm": xmForm,
-#         "xcForm":xcForm,
-#         "xiimForm":xiimForm,
-#         "xiicForm":xiicForm,
-#         "gmForm":gmForm,
-#         "gcForm":gcForm,
-#         "roll_number":roll_number,
-#         "adminRef":admin_ref
-#     }
-#     return render(request,"candidate_file_upload_details.html", context)
-#
-# def initiateUploadForm(request, roll_number, file, fileEntry):
-#
-#     if fileEntry:
-#         for fe in fileEntry:
-#             fp=fe.upload_path
-#             ft=fe.upload_type_id
-#             rn=fe.roll_number
-#
-#         fileUploadForm= UploadDetailsForm(request.POST or None, initial={
-#             "upload_path":fp,
-#             "upload_type_id":ft,
-#             "roll_number":rn
-#         })
-#     else:
-#         fileUploadForm=UploadDetailsForm(request.POST or None, initial={
-#             "roll_number":roll_number
-#         })
-#     return fileUploadForm
-#
-#
-# def saveUploadForm(request, roll_number, file_type_id, fileUploadForm, fileEntry):
-#
-#     if fileUploadForm.is_valid():
-#
-#         up=request.POST.getlist('upload_path')[file_type_id]
-#         ut=request.POST.getlist('upload_type_id')[file_type_id]
-#         rn=request.POST.getlist('roll_number')[file_type_id]
-#
-#         if fileEntry:
-#              fileEntry.update(upload_path=up,upload_type_id=ut,roll_numer=rn)
-#         else:
-#              instance=fileUploadForm.save(commit=False)
-#              instance.upload_path=up
-#              instance.upload_type_id=ut
-#              instance.roll_number=rn
-#              instance.save()
-#
-#     transaction.commit()
-#     return (request)
-#
-#
-#
 
 def jobDetailsView(request, roll_number):
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
+
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Program Applying For"
     jobDetailEntry=PostApplied.objects.filter(roll_number=roll_number)
@@ -461,7 +334,7 @@ def jobDetailsView(request, roll_number):
         "title" : title,
         "jobDetailForm" :jdForm,
         "roll_number": roll_number,
-        "adminRef":admin_ref
+        "offer_id":offer_id
     }
 
 
@@ -482,54 +355,67 @@ def jobDetailsView(request, roll_number):
 
 
         transaction.commit()
-
     return render(request, "candidate_job_details.html", context)
 
 
 
 def personalDetailsView(request, roll_number):
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
+
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Candidate Personal Details"
+    context={"offer_id":offer_id,
+             "title" : title,
+             "roll_number" : roll_number,
+             }
 
-    pd_entry = PersonalDetail.objects.get(roll_number=roll_number)
+    pd_entries = PersonalDetail.objects.filter(roll_number=roll_number.upper())
+    if not pd_entries:
+        pd_entries=PersonalDetail.objects.filter(roll_number=roll_number.lower())
 
-    print "pd_entry:=="
-    print pd_entry
+    if pd_entries:
+        full_name='';father_name='';mother_name='';date_of_birth='';gender='';nationality='';category_id='';
+        phone_number='';pan_card='';email_id='';
 
-    #for pd in pd_entry:
-    roll_number     = pd_entry.roll_number
-    full_name       = pd_entry.full_name,
-    father_name     = pd_entry.father_name,
-    mother_name     = pd_entry.mother_name,
-    date_of_birth   = pd_entry.date_of_birth,
-    gender          = pd_entry.gender,
-    nationality     = pd_entry.nationality,
-    category_id     = pd_entry.category_id,
-    phone_number    = pd_entry.phone_number,
-    pan_card        = pd_entry.pan_card,
-    email_id        = pd_entry.email_id
+        for pd_entry in pd_entries:
+            print "<>IOUOUYUI^&^&^(^(^"
+            roll_number     = pd_entry.roll_number
+            full_name       = pd_entry.full_name
+            father_name     = pd_entry.father_name
+            mother_name     = pd_entry.mother_name
+            date_of_birth   = pd_entry.date_of_birth
+            gender          = pd_entry.gender
+            nationality     = pd_entry.nationality
+            category_id     = pd_entry.category_id
+            phone_number    = pd_entry.phone_number
+            pan_card        = pd_entry.pan_card
+            email_id        = pd_entry.email_id
 
-    pdForm=PersonalDetailForm(request.POST or None,initial={
-        #'roll_number'       : pd.roll_number,
-        'full_name'         : full_name[0],
-        'father_name'       : father_name[0],
-        'mother_name'       : mother_name[0],
-        'date_of_birth'     : date_of_birth[0],
-        'gender'            : gender[0],
-        'nationality'       : nationality[0],
-        'category_id'       : category_id[0],
-        'phone_number'      : phone_number[0],
-        'pan_card'          : pan_card[0],
-        'email_id'          : email_id
-    })
-
-    context = {
-        "title" : title,
-        "roll_number" : roll_number,
-        "title" : title,
+        pdForm=PersonalDetailForm(request.POST or None,initial={
+            'roll_number'       : roll_number,
+            'full_name'         : full_name,
+            'father_name'       : father_name,
+            'mother_name'       : mother_name,
+            'date_of_birth'     : date_of_birth,
+            'gender'            : gender,
+            'nationality'       : nationality,
+            'category_id'       : category_id,
+            'phone_number'      : phone_number,
+            'pan_card'          : pan_card,
+            'email_id'          : email_id
+        })
+    else:
+        pdForm=PersonalDetailForm(request.POST or None)
+    context.update({
         "pdForm" : pdForm,
-        "adminRef":admin_ref
-    }
+
+    })
 
     if pdForm.is_valid():
         print "valid"
@@ -544,43 +430,102 @@ def personalDetailsView(request, roll_number):
         pa= request.POST['pan_card']
         em= request.POST['email_id']
 
-        pd_entry.update(full_name=fu,father_name=fa,mother_name=mo,date_of_birth=da,gender=ge,
-                        nationality=na,category_id=ca,phone_number=ph,pan_card=pa,email_id=em)
+        if pd_entries:
+            pd_entries.update(roll_number=roll_number,full_name=fu,father_name=fa,mother_name=mo,date_of_birth=da,gender=ge,
+                              nationality=na,category_id=ca,phone_number=ph,pan_card=pa,email_id=em)
+        else:
+            instance=pdForm.save(commit=False)
+            instance.roll_number=roll_number
+            instance.full_name=fu
+            instance.father_name=fa
+            instance.mother_name=mo
+            instance.date_of_birth=da
+            instance.gender=ge
+            instance.nationality=na
+            instance.category_id=ca
+            instance.phone_number=ph
+            instance.pan_card=pa
+            instance.email_id=em
+            instance.save()
+
         transaction.commit()
 
     return render(request, "candidate_personalDetails.html",context)
 
 
 
+def addressDetailsView(request,roll_number):
 
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
 
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
 
-def addressDetailsView(request, roll_number):
-
-    title="Candidate Address Details"
-
-    permanentAddressEntry=AddressDetails.objects.filter(roll_number=roll_number, address_type=0)
-    permanentAddressDetailsForm=initiateAddressForm(0,request,permanentAddressEntry)
-
-    currentAddressEntry=AddressDetails.objects.filter(roll_number=roll_number, address_type=1)
-    currentAddressDetailsForm=initiateAddressForm(1,request,currentAddressEntry)
-
-    request=saveAddress(roll_number,request,0,permanentAddressDetailsForm,permanentAddressEntry)
-    request=saveAddress(roll_number,request,1,currentAddressDetailsForm,currentAddressEntry)
-
+    title= "Address List"
     context={
         "title" : title,
-        "permanentAddress":permanentAddressDetailsForm,
-        "currentAddress":currentAddressDetailsForm,
-        "roll_number":roll_number,
-        "adminRef":admin_ref,
-
+        "roll_number" : roll_number,
+        "offer_id":offer_id
     }
-    return render(request, "candidate_addressDetails.html", context)
+
+    return render(request, "candidate_address_list.html",  context)
 
 
 
 
+def addressView(request,id,roll_number):
+
+    title="Address Details"
+    if id == 'per':
+        address_type=0
+        address_type_name='Permanent'
+    elif id == 'cur':
+        address_type=1
+        address_type_name='Current'
+
+
+    addressEntry=AddressDetails.objects.filter(roll_number=roll_number, address_type=address_type)
+    addressDetailsForm=initiateAddressForm(address_type,request,addressEntry)
+
+    request=saveAddress(roll_number,request,address_type,addressDetailsForm,addressEntry)
+    updateAddressInPersonalDetails(roll_number,address_type,addressEntry)
+    context={
+        "title" : title,
+        "address":addressDetailsForm,
+        "roll_number":roll_number,
+        "offer_id":offer_id,
+        "address_type_name":address_type_name,
+    }
+    return render(request, "candidate_address_details.html", context)
+
+
+def updateAddressInPersonalDetails(roll_number,address_type,addressEntry):
+
+    if addressEntry:
+        pass
+    else:
+        try:
+            perDetail=PersonalDetail.objects.get(roll_number=roll_number)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            address_id=0
+            if address_type == 0:
+                for ae in addressEntry:
+                    address_id=ae.address_id
+                residential_address_id=address_id
+                perDetail.save(force_update=True,update_fields=["residential_address_id"])
+            elif address_type == 1:
+                for ae in addressEntry:
+                    address_id=ae.address_id
+                current_address_id = address_id
+                perDetail.save(force_update=True,update_fields=["current_address_id"])
+            transaction.commit()
+    return()
 
 def initiateAddressForm(address_type,request, addressEntry):
 
@@ -603,7 +548,7 @@ def initiateAddressForm(address_type,request, addressEntry):
             "state"    : state,
             "city"     : city,
             "pincode"  : pincode
-            }
+        }
         addressDetailForm= AddressDetailForm(request.POST or None, initial=address_db)
 
     else:
@@ -618,31 +563,40 @@ def saveAddress(roll_number, request, i,addressDetailForm,addressEntry):
 
     if addressDetailForm.is_valid():
 
-        ad1=request.POST.getlist('address1')[i]
-        ad2=request.POST.getlist('address2')[i]
-        ad3=request.POST.getlist('address3')[i]
-        st=request.POST.getlist('state')[i]
-        pi=request.POST.getlist('pincode')[i]
-        ci=request.POST.getlist('city')[i]
+        ad1=request.POST.getlist('address1')[0]
+        ad2=request.POST.getlist('address2')[0]
+        ad3=request.POST.getlist('address3')[0]
+        st=request.POST.getlist('state')[0]
+        pi=request.POST.getlist('pincode')[0]
+        ci=request.POST.getlist('city')[0]
 
         if addressEntry:
-             addressEntry.update(address_type=i,address1=ad1,address2=ad2,address3=ad3,state=st,city=ci,pincode=pi)
+            addressEntry.update(address_type=i,address1=ad1,address2=ad2,address3=ad3,state=st,city=ci,pincode=pi)
         else:
-             instance=addressDetailForm.save(commit=False)
-             instance.address_type=i
-             instance.roll_number=roll_number
-             instance.address1=ad1
-             instance.address2 = ad2
-             instance.address3 = ad3
-             instance.state=st
-             instance.pincode=pi
-             instance.city= ci
-             instance.save()
+            instance=addressDetailForm.save(commit=False)
+            instance.address_type=i
+            instance.roll_number=roll_number
+            instance.address1=ad1
+            instance.address2 = ad2
+            instance.address3 = ad3
+            instance.state=st
+            instance.pincode=pi
+            instance.city= ci
+            instance.save()
 
     transaction.commit()
     return (request)
 
 def programDetailsView(request, roll_number):
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
+
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+
     title = "Program Applying For"
     programDetailEntry=ProgramApplied.objects.filter(roll_number=roll_number)
 
@@ -672,7 +626,7 @@ def programDetailsView(request, roll_number):
         "title" : title,
         "programDetailForm" :programDetailForm,
         "roll_number": roll_number,
-        "adminRef":admin_ref
+        "offer_id":offer_id
     }
 
 
@@ -689,7 +643,7 @@ def programDetailsView(request, roll_number):
         if programDetailEntry:
 
             programDetailEntry.update(program_id=pr,roll_number=roll_number,course_id=co,exam_name_id=en,
-                                       exam_subject_id=es,marks_scored=ms)
+                                      exam_subject_id=es,marks_scored=ms)
         else:
             instance= programDetailForm.save(commit=False)
             instance.roll_number= roll_number
@@ -711,17 +665,31 @@ def programDetailsView(request, roll_number):
 
 
 def workExperienceView(request, roll_number):
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
+
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Candidate Work Experience"
+    workExperienceEntry=None
+
+    context={
+        "title" : title,
+        "roll_number": roll_number,
+        "offer_id":offer_id
+    }
+
 
     workExperienceEntry=WorkExperience.objects.filter(roll_number=roll_number)
-    print workExperienceEntry
-    #ai=0
+
+
     if workExperienceEntry:
-        print "true"
+        lo='';po='';jd='';sy='';ey='';du='';
         for wee in workExperienceEntry:
-            #ai=wee.workEx_id
-            #print ai
             lo=wee.last_organisation
             po=wee.position
             jd=wee.job_description
@@ -737,19 +705,11 @@ def workExperienceView(request, roll_number):
             "start_year":sy,
             "end_year":ey,
             "duration":du,
-
-
         })
-
     else:
         workExperienceForm=WorkExperienceForm(request.POST or None)
 
-    context={
-        "title" : title,
-        "workExperienceForm" : workExperienceForm,
-        "roll_number": roll_number,
-        "adminRef":admin_ref
-    }
+    context.update({"workExperienceForm" : workExperienceForm})
 
 
     if workExperienceForm.is_valid():
@@ -757,7 +717,6 @@ def workExperienceView(request, roll_number):
         lo=request.POST.getlist('last_organisation')[0]
         po=request.POST.getlist('position')[0]
         jd=request.POST.getlist('job_description')[0]
-        print jd
         sy=request.POST.getlist('start_year')[0]
         ey=request.POST.getlist('end_year')[0]
         du=request.POST.getlist('duration')[0]
@@ -780,40 +739,57 @@ def workExperienceView(request, roll_number):
 
 
         transaction.commit()
-
     return render(request, "candidate_workExperience.html", context)
 
 
+def educationDetailsView(request,roll_number):
+    try:
+        subStatus =SubmitStatus.objects.get(roll_number=roll_number)
+        submission_status=subStatus.submission_status
+    except ObjectDoesNotExist:
+        submission_status =0
 
+    if submission_status ==1:
+        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
 
-
-def educationDetailsView(request, roll_number):
-    title = "Candidate Educational Details"
-
-    xEntry = EducationDetails.objects.filter(roll_number=roll_number,education_type=1)
-    xiiEntry = EducationDetails.objects.filter(roll_number=roll_number,education_type=2)
-    grEntry = EducationDetails.objects.filter(roll_number=roll_number,education_type=3)
-
-    print xEntry, xiiEntry, grEntry
-
-    xForm   = initiateEducationDetailForm("Xth",request,xEntry)
-    xiiForm = initiateEducationDetailForm("XIIth",request,xiiEntry)
-    grForm  = initiateEducationDetailForm("Graduation",request,grEntry)
-
-    request = saveEducationDetails(roll_number,1,xEntry,xForm,0,request)
-    request = saveEducationDetails(roll_number,2,xiiEntry,xiiForm,1,request)
-    request = saveEducationDetails(roll_number,3,grEntry,grForm,2,request)
-
-    context = {
-        "roll_number" : roll_number,
+    title= "Education Details"
+    context={
         "title" : title,
-        "xForm" : xForm,
-        "xiiForm" : xiiForm,
-        "grForm"  : grForm,
-        "adminRef":admin_ref,
+        "roll_number" : roll_number,
+         "offer_id":offer_id,
     }
 
-    return render(request, "candidate_educationDetails.html",context)
+    return render(request, "candidate_educational_details.html",  context)
+
+
+def stdEducationDetailsView(request, id, roll_number):
+
+    if id== "1":
+        type=1
+        std="Xth"
+    elif id=="2":
+        type=2
+        std="XIIth"
+    else:
+        type=3
+        std="Graduation"
+
+    title = std+" Details"
+
+    edEntry = EducationDetails.objects.filter(roll_number=roll_number,education_type=type)
+    edForm   = initiateEducationDetailForm(id,request,edEntry)
+
+    request = saveEducationDetails(roll_number,type,edEntry,edForm,0,request)
+
+    context = {
+        "std" : std,
+        "roll_number" : roll_number,
+        "title" : title,
+        "edForm" : edForm,
+        "offer_id":offer_id,
+    }
+
+    return render(request, "candidate_std_details.html",context)
 
 
 def initiateEducationDetailForm(std,request,entry):
@@ -828,7 +804,7 @@ def initiateEducationDetailForm(std,request,entry):
 
 
         edForm = EducationalDetailForm(request.POST or None,initial={
-            #"education_type"   : x_ty,
+            "education_type"   : ty,
             "percentage"      : pe,
             "board_university"           : bo,
             "institute"       : ins,
@@ -855,7 +831,7 @@ def saveEducationDetails(roll_number,ty,edEntry, edForm,i,request):
             instance.education_type=ty
             instance.roll_number=roll_number
             instance.percentage=pe
-            instance.board=bo
+            instance.board_university=bo
             instance.institute=ins
             instance.year_of_passing=yp
             instance.save()

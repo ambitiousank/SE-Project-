@@ -6,39 +6,6 @@ from staffmodule.models import UploadDetails
 from staffmodule.models import ProgramApplied
 from staffmodule.models import PostApplied
 from staffmodule.models import WorkExperience
-from staffmodule.models import AdminReference
-
-Status = (  
-    (1,'Approve' ),
-    (2,'Decline'),
-    (3,'Pending')
-    
-   
-)
-class validationForm(forms.Form):
-	Comments=forms.CharField(widget=forms.Textarea(attrs={'rows': '2','cols':'20'}))
-	Action=forms.ChoiceField(choices=Status,required=True)
-
-
-
-	def clean_Comments(self):
-		print "here"
-		validationComments=self.cleaned_data.get('Comments')
-
-		print validationComments
-		return validationComments
-
-
-
-class adminForm(forms.ModelForm):
-	form_submission_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'), input_formats=('%d/%m/%Y',))
-	
-	class Meta:
-		model=AdminReference
-		fields=['form_template','form_submission_date']
-
-	def clean(self):
-		return ""
 
 
 

@@ -1,0 +1,664 @@
+[
+  {
+    "model": "staffmodule.addressref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "add_type_id": 1,
+      "add_desc": "residential"
+    }
+  },
+  {
+    "model": "staffmodule.addressref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "add_type_id": 2,
+      "add_desc": "current"
+    }
+  },
+  {
+    "model": "staffmodule.categoryref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "category_id": 1,
+      "category_desc": "General"
+    }
+  },
+  {
+    
+    "model": "staffmodule.categoryref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "category_id": 2,
+      "category_desc": "SC"
+    }
+  },
+  {
+    
+    "model": "staffmodule.categoryref",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "category_id": 3,
+      "category_desc": "ST"
+    }
+  },
+  {
+    
+    "model": "staffmodule.categoryref",
+    "pk": 4,
+    "fields": { "created_on": date_now,
+      "category_id": 4,
+      "category_desc": "OBC"
+    }
+  },
+  {
+    
+    "model": "staffmodule.courseref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "course_id": 1,
+      "course_desc": "IT"
+    }
+  },
+  {
+    
+    "model": "staffmodule.courseref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "course_id":2,
+      "course_desc": "ESD"
+    }
+  },
+  {
+    
+    "model": "staffmodule.educationref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "education_id":1,
+      "education_desc": "Xth"
+    }
+  },
+  {
+    
+    "model": "staffmodule.educationref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "education_id":2,
+      "education_desc": "XIIth"
+    }
+  },
+  {
+    
+    "model": "staffmodule.educationref",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "education_id":3,
+      "education_desc": "Graduation"
+    }
+  },
+  {
+    
+    "model": "staffmodule.examref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "exam_id":1,
+      "exam_desc": "GATE"
+    }
+  },
+  {
+    
+    "model": "staffmodule.examref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "exam_id":2,
+      "exam_desc": "GRE"
+    }
+  },
+  {
+    
+    "model": "staffmodule.examref",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "exam_id":3,
+      "exam_desc": "JEE"
+    }
+  },
+  {
+    
+    "model": "staffmodule.examsubjectref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "exam_subject_id":1,
+      "exam_subject_desc": "CS/IT"
+    }
+  },
+  {
+    
+    "model": "staffmodule.examsubjectref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "exam_subject_id":2,
+      "exam_subject_desc": "ECE"
+    }
+  },
+  {
+    
+    "model": "staffmodule.genderref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "gender_id":1,
+      "gender_desc": "Male"
+    }
+  },
+  {
+    
+    "model": "staffmodule.genderref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "gender_id":2,
+      "gender_desc": "Female"
+    }
+  },
+  {
+    
+    "model": "staffmodule.genderref",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "gender_id":3,
+      "gender_desc": "Others"
+    }
+  },
+  {
+    
+    "model": "staffmodule.postref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "post_id":1,
+      "post_desc": "Software Engineer"
+    }
+  },
+  {
+    
+    "model": "staffmodule.postref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "post_id":2,
+      "post_desc": "Data Analyst"
+    }
+  },
+  {
+    
+    "model": "staffmodule.postref",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "post_id":3,
+      "post_desc": "Software Developer"
+    }
+  },
+  {
+    
+    "model": "staffmodule.postref",
+    "pk": 4,
+    "fields": { "created_on": date_now,
+      "post_id":4,
+      "post_desc": "IT"
+    }
+  },
+  {
+    
+    "model": "staffmodule.programref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "program_id":1,
+      "program_desc": "M.Tech"
+    }
+  },
+  {
+    
+    "model": "staffmodule.programref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "program_id":2,
+      "program_desc": "Inetgrated M.Tech"
+    }
+  },
+  {
+    
+    "model": "staffmodule.programref",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "program_id":3,
+      "program_desc": "M.Sc Digital Society"
+    }
+  },
+  {
+    
+    "model": "staffmodule.programref",
+    "pk": 4,
+    "fields": { "created_on": date_now,
+      "program_id":4,
+      "program_desc": "MS"
+    }
+  },
+  {
+    
+    "model": "staffmodule.programref",
+    "pk": 5,
+    "fields": { "created_on": date_now,
+      "program_id":5,
+      "program_desc": "Phd"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "state_id":1,
+      "state_desc":"ANDAMAN & NICOBAR ISLANDS"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "state_id":2,
+      "state_desc":"ANDHRA PRADESH"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "state_id":3,
+      "state_desc":"ASSAM"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 4,
+    "fields": { "created_on": date_now,
+      "state_id":4,
+      "state_desc":"ARUNACHAL PRADESH"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 5,
+    "fields": { "created_on": date_now,
+      "state_id":5,
+      "state_desc":"BIHAR"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 6,
+    "fields": { "created_on": date_now,
+      "state_id":6,
+      "state_desc":"CHANDIGARH"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 7,
+    "fields": { "created_on": date_now,
+      "state_id":7,
+      "state_desc":"CHHATTISGARH"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 8,
+    "fields": { "created_on": date_now,
+      "state_id":8,
+      "state_desc":"DADRA & NAGAR HAVELI"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 9,
+    "fields": { "created_on": date_now,
+      "state_id":9,
+      "state_desc":"DAMAN & DIU"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 10,
+    "fields": { "created_on": date_now,
+      "state_id":10,
+      "state_desc":"GOA"
+    }
+  },
+  {
+    "model": "staffmodule.stateref",
+    "pk": 11,
+    "fields": { "created_on": date_now,
+      "state_id":11,
+      "state_desc":"GUJARAT"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 12,
+    "fields": { "created_on": date_now,
+      "state_id":12,
+      "state_desc":"HARYANA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 13,
+    "fields": { "created_on": date_now,
+      "state_id":13,
+      "state_desc":"HIMACHAL PRADESH"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 14,
+    "fields": { "created_on": date_now,
+      "state_id":14,
+      "state_desc":"JAMMU & KASHMIR"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 15,
+    "fields": { "created_on": date_now,
+      "state_id":15,
+      "state_desc":"JHARKHAND"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 16,
+    "fields": { "created_on": date_now,
+      "state_id":16,
+      "state_desc":"KARNATAKA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 17,
+    "fields": { "created_on": date_now,
+      "state_id":17,
+      "state_desc":"KERALA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 18,
+    "fields": { "created_on": date_now,
+      "state_id":18,
+      "state_desc":"LAKSHADWEEP"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 19,
+    "fields": { "created_on": date_now,
+      "state_id":19,
+      "state_desc":"MADHYA PRADESH"
+    }
+  },
+  {
+    "model": "staffmodule.stateref",
+    "pk": 20,
+    "fields": { "created_on": date_now,
+      "state_id":20,
+      "state_desc":"MAHARASHTRA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 21,
+    "fields": { "created_on": date_now,
+      "state_id":21,
+      "state_desc":"MANIPUR"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 22,
+    "fields": { "created_on": date_now,
+      "state_id":22,
+      "state_desc":"MEGHALAYA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 23,
+    "fields": { "created_on": date_now,
+      "state_id":23,
+      "state_desc":"MIZORAM"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 24,
+    "fields": { "created_on": date_now,
+      "state_id":24,
+      "state_desc":"NAGALAND"
+    }
+  },
+  {
+    "model": "staffmodule.stateref",
+    "pk": 25,
+    "fields": { "created_on": date_now,
+      "state_id":25,
+      "state_desc":"DELHI"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 26,
+    "fields": { "created_on": date_now,
+      "state_id":26,
+      "state_desc":"ORISSA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 27,
+    "fields": { "created_on": date_now,
+      "state_id":27,
+      "state_desc":"PUDUCHERRY"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 28,
+    "fields": { "created_on": date_now,
+      "state_id":28,
+      "state_desc":"PUNJAB"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 29,
+    "fields": { "created_on": date_now,
+      "state_id":29,
+      "state_desc":"RAJASTHAN"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 30,
+    "fields": { "created_on": date_now,
+      "state_id":30,
+      "state_desc":"SIKKIM"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 31,
+    "fields": { "created_on": date_now,
+      "state_id":31,
+      "state_desc":"TAMIL NADU"
+    }
+  },
+  {
+  
+    "model": "staffmodule.stateref",
+    "pk": 32,
+    "fields": { "created_on": date_now,
+      "state_id":32,
+      "state_desc":"TELANGANA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 33,
+    "fields": { "created_on": date_now,
+      "state_id":33,
+      "state_desc":"TRIPURA"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 34,
+    "fields": { "created_on": date_now,
+      "state_id":34,
+      "state_desc":"UTTAR PRADESH"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 35,
+    "fields": { "created_on": date_now,
+      "state_id":35,
+      "state_desc":"UTTARAKHAND"
+    }
+  },
+  {
+    
+    "model": "staffmodule.stateref",
+    "pk": 36,
+    "fields": { "created_on": date_now,
+      "state_id":36,
+      "state_desc":"WEST BENGAL"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 1,
+    "fields": { "created_on": date_now,
+      "upload_type_id":1,
+      "upload_type_desc":"Photograph"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 2,
+    "fields": { "created_on": date_now,
+      "upload_type_id":2,
+      "upload_type_desc":"Signature"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 3,
+    "fields": { "created_on": date_now,
+      "upload_type_id":3,
+      "upload_type_desc":"Xth Marksheet"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 4,
+    "fields": { "created_on": date_now,
+      "upload_type_id":4,
+      "upload_type_desc":"Xth Certificate"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 5,
+    "fields": { "created_on": date_now,
+      "upload_type_id":5,
+      "upload_type_desc":"XIIth Marksheet"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 6,
+    "fields": { "created_on": date_now,
+      "upload_type_id":6,
+      "upload_type_desc":"XIIth Certificate"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 7,
+    "fields": { "created_on": date_now,
+      "upload_type_id":7,
+      "upload_type_desc":"Graduation Marksheet"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 8,
+    "fields": { "created_on": date_now,
+      "upload_type_id":8,
+      "upload_type_desc":"Graduation Certificate"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 9,
+    "fields": { "created_on": date_now,
+      "upload_type_id":9,
+      "upload_type_desc":"Gate Score Card"
+    }
+  },
+  {
+    
+    "model": "staffmodule.uploadtyperef",
+    "pk": 10,
+    "fields": { "created_on": date_now,
+      "upload_type_id":10,
+      "upload_type_desc":"Salary Slip"
+    }
+  }
+
+]
+

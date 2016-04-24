@@ -102,8 +102,9 @@ class PersonalDetail(models.Model):
     CATEGORY_CHOICES = (
     	(0, 'Select'),
         (1, 'Gen'),
-        (2, 'SC/ST'),
-        (3, 'OBC')
+        (2, 'SC'),
+        (3, 'ST'),
+        (4, 'OBC')
     )
 
     roll_number=models.CharField(max_length=32,unique=True,primary_key=True)
@@ -192,50 +193,7 @@ class PostApplied(models.Model):
 
     post_applied_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
-    post=models.ForeignKey(PostRef)
-
-
-
-class PhotoFiles(models.Model):
-    photoFile_id            = models.AutoField(primary_key=True)
-    roll_number             = models.CharField(max_length=32, unique=True)
-    photograph_file 	    = models.FileField(upload_to = settings.MEDIA_ROOT, null=True)
-
-class SignatureFiles(models.Model):
-    sigFile_id              = models.AutoField(primary_key=True)
-    roll_number             = models.CharField(max_length=32, unique=True)
-    signature_file 	        = models.FileField(upload_to = settings.MEDIA_ROOT, null=True)
-
-class XthMarksheets (models.Model):
-    xmFile_id              = models.AutoField(primary_key=True)
-    roll_number             = models.CharField(max_length=32, unique=True)
-    xth_marksheet           = models.FileField(upload_to = settings.MEDIA_ROOT, null = True)
-
-# class XthCertificates (models.Model):
-#     xcFile_id              = models.AutoField(primary_key=True)
-#     roll_number             = models.CharField(max_length=32, unique=True)
-#     xth_certificate         = models.FileField(upload_to = settings.MEDIA_ROOT, null = True)
-#
-#
-# class XIIthMarksheets (models.Model):
-#     xiimFile_id              = models.AutoField(primary_key=True)
-#     roll_number             = models.CharField(max_length=32, unique=True)
-#     xIIth_marksheet         = models.FileField(upload_to = settings.MEDIA_ROOT, null = True)
-#
-# class XIIthCertificates (models.Model):
-#     xiicFile_id              = models.AutoField(primary_key=True)
-#     roll_number             = models.CharField(max_length=32, unique=True)
-#     xIIth_certificate       = models.FileField(upload_to = settings.MEDIA_ROOT, null = True)
-#
-# class GraduationMarksheets (models.Model):
-#     gmFile_id              = models.AutoField(primary_key=True)
-#     roll_number             = models.CharField(max_length=32, unique=True)
-#     graduation_marksheet    = models.FileField(upload_to = settings.MEDIA_ROOT, null = True)
-#
-# class GraduationCertificates (models.Model):
-#     gcFile_id              = models.AutoField(primary_key=True)
-#     roll_number             = models.CharField(max_length=32, unique=True)
-#     graduation_certificate  = models.FileField(upload_to = settings.MEDIA_ROOT, null = True)
+    post=models.IntegerField(choices=POST_CHOICES,default=0)
 
 
 
@@ -245,8 +203,8 @@ class UploadDetails(models.Model):
 
     upload_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
-    upload_type=models.ForeignKey(UploadTypeRef)
-    upload_path=models.CharField(max_length=100)
+    upload_type=models.IntegerField(UploadTypeRef)
+    upload_path=models.FileField(upload_to=settings.DOWNLOAD_ROOT)
 
 ###New class
 class AdminReference(models.Model):
@@ -267,6 +225,10 @@ class GenderRef(models.Model):
     created_on=models.DateField(auto_now_add=True)
 
 ###New class
+
+class SubmitStatus(models.Model):
+    roll_number=models.CharField(max_length=32,primary_key=True)
+    submission_status=models.PositiveSmallIntegerField(default=0)   # 0- Not_submitted; 1-Submitted
 
 class User(models.Model):
     user_id     = models.AutoField(primary_key=True)

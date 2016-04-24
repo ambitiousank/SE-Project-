@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--{% extends "masterpage_candidate.html" %}-->
+{% load static %}
+{% block content %}
+<!--{% load url from future%}-->
+
+<div class="table-responsive" xmlns="http://www.w3.org/1999/html">
+    <br>
+     <form method="POST" action=''>{% csrf_token %}
+        <!--<h4> <b>{{address_type_name}} Address Details</b></h4>-->
+        <table class="table table-striped">
+        <tr>
+            <th bgcolor="#e1e1e1">{{address_type_name}} {{title}}:</th>
+            <td bgcolor="#e1e1e1"> </td>
+            {{address}}
+        </tr>
+        </table>
+
+        </br>
+
+        <input type= "hidden" name='roll_number' value="{{roll_number}}" />
+        </br>
+        <input type = 'submit' value = 'Save'>
+
+    </form>
+</div>
+</html>
+{%endblock%}

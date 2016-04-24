@@ -197,18 +197,18 @@ Female
 
 <tr>
 	<th>Program</th>
-	<td>{{program_name.program_desc}}</td>
+	<td>{{program_name}}</td>
 </tr>
 <tr>
 	<th>Course Name</th>
-	<td>{{course.course_desc}}</td>
+	<td>{{course}}</td>
 </tr>
 <tr>
 	<th>Exam Name</th>
 	<td>{{exam}}</td>
 </tr>
 	<th>Subject</th>
-	<td>{{subject.exam_subject_desc}}</td>
+	<td>{{subject}}</td>
 <tr>
 	<th>Marks Scored</th>
 	<td>{{program.marks_scored}}</td>
@@ -234,7 +234,7 @@ Female
 <table class="table table-striped">
 {%for up in upload%}
 <tr>
-	<th>{{up.upload_type.upload_type_desc}}</th>
+	<th>{{up.upload_type}}</th>
 <!-- 	<td><embed height="150%" width="100%"  name="plugin" src="{% static filename %}"  type="application/pdf"></td>
  -->
  <td><embed height="300px" width="100%"  name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  type="application/pdf"></td>

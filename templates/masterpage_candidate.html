@@ -31,7 +31,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <p class="navbar-brand">Welcome Candidate</p>
+          <p class="navbar-brand">Welcome {{roll_number}} !</p>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -51,18 +51,18 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <!--<li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>-->
-            <li><a href="/home/{{roll_number}}">Home</a></li>
+            <li><a href="/candidate_home/{{roll_number}}">Home</a></li>
             <li><a href="/candidate_personal_details/{{roll_number}}">Personal Details</a></li>
             <li><a href="/candidate_academic_details/{{roll_number}}">Educational Details</a></li>
             <li><a href="/candidate_work_experience/{{roll_number}}">Work Experience</a></li>
             <li><a href="/candidate_address_details/{{roll_number}}">Address Details</a></li>
-            {%ifequal adminRef.offer_id 1%}
+            {%ifequal offer_id 1%}
                 <li><a href="/candidate_program_details/{{roll_number}}">Apply For a Program</a></li>
                 {%else%}
                 <li><a href="/candidate_job_details/{{roll_number}}">Apply For a Post</a></li>
                 {%endifequal%}
             <li><a href="/candidate_file_upload/{{roll_number}}">Upload Files</a></li>
-            <li><a href="/submit/{{roll_number}}">Submit</a></li>
+            <li><a href="/candidate_submit/{{roll_number}}">Submit</a></li>
           </ul>
           <!--<ul class="nav nav-sidebar">
             <li><a href="/staff">DashBoard</a></li>

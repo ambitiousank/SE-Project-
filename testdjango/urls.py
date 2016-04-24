@@ -36,19 +36,30 @@ urlpatterns = [
 	url(r'^templates/', 'adminmodule.views.template', name="template"),
 
 
-	url(r'^home/(?P<roll_number>[A-Za-z0-9]+)/$', 'candidateModule.views.homeView', name='home'),
-    url(r'^candidate_personal_details/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.personalDetailsView',name='personalDetails'),
+	url(r'^candidate_home/(?P<roll_number>[A-Za-z0-9]+)/$', 'candidateModule.views.homeView', name='home'),
+	url(r'^candidate_personal_details/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.personalDetailsView',name='personalDetails'),
+    url(r'^candidate_address/(?P<id>per)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.addressView',name='permanentAddress'),
+	url(r'^candidate_address/(?P<id>cur)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.addressView',name='currentAddress'),
     url(r'^candidate_academic_details/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.educationDetailsView',name='educationDetails'),
+	url(r'^candidate_academic_details/(?P<id>1)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.stdEducationDetailsView',name='xthDetails'),
+	url(r'^candidate_academic_details/(?P<id>2)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.stdEducationDetailsView',name='xiithDetails'),
+	url(r'^candidate_academic_details/(?P<id>3)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.stdEducationDetailsView',name='gradDetails'),
     url(r'^candidate_work_experience/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.workExperienceView',name='workExperience'),
     url(r'^candidate_address_details/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.addressDetailsView',name='addressDetails'),
     url(r'^candidate_program_details/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.programDetailsView',name='programDetails'),
     url(r'^candidate_job_details/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.jobDetailsView',name='jobDetails'),
     url(r'^candidate_file_upload/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileUploadView',name='fileUpload'),
-    url(r'^candidate_photo_upload/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.photoUploadView',name='photoUpload'),
-    url(r'^candidate_sign_upload/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.signUploadView',name='signUpload'),
-    url(r'^candidate_xm_upload/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.xmUploadView',name='xmUpload'),
-
-	
+    url(r'^candidate_photo_upload/(?P<upload_doc>photo)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='photoUpload'),
+    url(r'^candidate_sign_upload/(?P<upload_doc>sign)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='signUpload'),
+    url(r'^candidate_xm_upload/(?P<upload_doc>xm)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='xMarkUpload'),
+	url(r'^candidate_xc_upload/(?P<upload_doc>xc)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='xCertUpload'),
+    url(r'^candidate_xiim_upload/(?P<upload_doc>xiim)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='xiiMarkUpload'),
+    url(r'^candidate_xiic_upload/(?P<upload_doc>xiic)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='xiiCerUpload'),
+	url(r'^candidate_gm_upload/(?P<upload_doc>gm)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='gradMarkUpload'),
+    url(r'^candidate_gc_upload/(?P<upload_doc>gc)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='gradCertUpload'),
+    url(r'^candidate_sc_upload/(?P<upload_doc>sc)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='scoreCardUpload'),
+	url(r'^candidate_ss_upload/(?P<upload_doc>ss)/(?P<roll_number>[A-Za-z0-9]+)/$','candidateModule.views.fileDetailsView',name='salarySlipUpload'),
+	url(r'^candidate_submit/(?P<roll_number>[A-Za-z0-9]+)/$', 'candidateModule.views.submitView', name='submit'),
 	
 	
 	url(r'^admin/', admin.site.urls),

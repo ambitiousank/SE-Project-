@@ -2,20 +2,24 @@
 <!--{% extends "masterpage_candidate.html" %}-->
 {% load static %}
 {% block content %}
+<!--{% load url from future %}-->
+
 <div class="table-responsive">
     <br>
     <form method="POST" action=''>{% csrf_token %}
+        <!--<h4> <b>Educational Details</b></h4>-->
         <table class="table table-striped">
-            <tr>
-            <th bgcolor="#e1e1e1"> Personal Details</th><td bgcolor="#e1e1e1"></td>
-                {{pdForm}}
-            </tr>
+        <tr>
+            <th bgcolor="#e1e1e1">Education Type:</th>
+            <td bgcolor="#e1e1e1"><b>{{std}}</b></td>
+            {{edForm}}
+        </tr>
         </table>
-
         </br>
-        <input type = 'submit' name = "submit_save" value = 'Save'>
+        <input type = 'submit' value = 'Save'>
 
     </form>
+
 </div>
 </html>
 {%endblock%}

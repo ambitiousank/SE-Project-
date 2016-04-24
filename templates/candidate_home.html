@@ -1,0 +1,288 @@
+{% extends "masterpage_candidate.html" %}
+{% load static %}
+{% block content %}
+<h1>{{title}}</h1>
+<div class="table-responsive">
+    <h4 style="color:red;">[NOT Submitted]</p></h4>
+    <br>
+    <h4> <b>Personal Details</b></h4>
+    <table class="table table-striped">
+        <tr>
+            <th>Roll Number</th>
+            <td>{{roll_number}}</td>
+        </tr>
+        <tr>
+            <th>Student's Name</th>
+            <td>{{personal.full_name}}</td>
+        </tr>
+
+        <tr>
+            <th>Father's Name</th>
+            <td>{{personal.father_name}}</td>
+        </tr>
+
+        <tr>
+            <th>Mother's Name</th>
+            <td>{{personal.mother_name}}</td>
+        </tr>
+
+        <tr>
+            <th>Gender</th>
+            <td>
+                {%ifequal personal.gender 1%}
+                Male
+                {%endifequal%}
+                {%ifequal personal.gender 2%}
+                Female
+                {%endifequal%}
+
+            </td>
+        </tr>
+
+
+        <tr>
+            <th>Date of Birth</th>
+            <td>{{personal.date_of_birth}}</td>
+        </tr>
+
+
+        <tr>
+            <th>Email Id</th>
+            <td>{{personal.email_id}}</td>
+
+        </tr>
+
+        <tr>
+            <th>Nationality</th>
+            <td>{{personal.nationality}}</td>
+
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>{{category}}</td>
+
+        </tr>
+
+        <tr>
+            <th>Phone No.</th>
+            <td>{{personal.phone_number}}</td>
+
+        </tr>
+
+
+        <tr>
+            <th>PAN Card</th>
+            <td>{{personal.pan_card}}</td>
+
+        </tr>
+
+    </table>
+
+    <br>
+    <h4> <b>Educational Details</b></h4>
+    <table class="table table-striped">
+        <tr>
+            <th bgcolor="#e1e1e1">Education Standard</th>
+            <th bgcolor="#e1e1e1">Percentage</th>
+            <th bgcolor="#e1e1e1">Board</th>
+            <th bgcolor="#e1e1e1">Institution</th>
+            <th bgcolor="#e1e1e1">Year of Passing</th>
+
+        </tr>
+        {% for i in education_details%}
+        <tr>
+
+            {%ifequal i.education_type 1 %}
+            <td>Xth</td>
+
+            {%else%}
+            {%ifequal i.education_type 2 %}
+            <td>XIIth</td>
+            {% else %}
+            <td>Graduation</td>
+            {% endifequal %}
+            {% endifequal %}
+
+            <td>{{i.percentage}} %</td>
+            <td>{{i.board_university}}</td>
+            <td>{{i.institute}}</td>
+            <td>{{i.year_of_passing}}</td>
+
+
+        </tr>
+        {% endfor%}
+    </table>
+    <br>
+    <h4> <b>Work Experience</b></h4>
+
+
+    <table class="table table-striped">
+        <tr>
+            <th bgcolor="#e1e1e1">Name of Organisation</th>
+            <th bgcolor="#e1e1e1">Position</th>
+            <th bgcolor="#e1e1e1">Job Description</th>
+            <th bgcolor="#e1e1e1">Start Year</th>
+            <th bgcolor="#e1e1e1">End Year</th>
+            <th bgcolor="#e1e1e1">Duration(in months)</th>
+
+        </tr>
+
+        {%for work in work_ex%}
+        <tr>
+            <td>{{work.last_organisation}}</td>
+            <td>{{work.position}}</td>
+            <td>{{work.job_description}}</td>
+            <td>{{work.start_year}}</td>
+            <td>{{work.end_year}}</td>
+            <td>{{work.duration}}</td>
+        </tr>
+
+        {%endfor%}
+
+    </table>
+
+    <br>
+
+
+    <br>
+    <h4> <b>Address Details</b></h4>
+    <table class="table table-striped">
+
+        <tr>
+            <th bgcolor="#e1e1e1">Permanent Address</th><td bgcolor="#e1e1e1"></td>
+        </tr>
+
+        <tr>
+            <th>Address 1</th>
+            <td>{{permanent_address.address1}}</td>
+        </tr>
+
+        <tr>
+            <th>Address 2</th>
+            <td>{{permanent_address.address2}}</td>
+        </tr>
+
+        <tr>
+            <th>Address 3</th>
+            <td>{{permanent_address.address3}}</td>
+        </tr>
+
+        <tr>
+            <th>State</th>
+            <td>{{permanent_address.state}}</td>
+        </tr>
+
+        <tr>
+            <th>City</th>
+            <td>{{permanent_address.city}}</td>
+        </tr>
+
+        <tr>
+            <th>Pincode</th>
+            <td>{{permanent_address.pincode}}</td>
+        </tr>
+
+
+        <tr>
+            <th bgcolor="#e1e1e1">Current Address</th><td bgcolor="#e1e1e1"></td>
+        </tr>
+
+        <tr>
+            <th>Address 1</th>
+            <td>{{current_address.address1}}</td>
+        </tr>
+
+        <tr>
+            <th>Address 2</th>
+            <td>{{current_address.address2}}</td>
+        </tr>
+
+        <tr>
+            <th>Address 3</th>
+            <td>{{current_address.address3}}</td>
+        </tr>
+
+        <tr>
+            <th>State</th>
+            <td>{{current_address.state}}</td>
+        </tr>
+
+        <tr>
+            <th>City</th>
+            <td>{{current_address.city}}</td>
+        </tr>
+
+        <tr>
+            <th>Pincode</th>
+            <td>{{current_address.pincode}}</td>
+        </tr>
+
+
+    </table>
+
+
+    {% ifequal offer_id 1%}
+    <br>
+    <h4> <b>Program Applied</b></h4>
+    <table class="table table-striped">
+
+        <tr>
+            <th>Program</th>
+            <td>{{program_name}}</td>
+        </tr>
+        <tr>
+            <th>Course Name</th>
+            <td>{{course}}</td>
+        </tr>
+        <tr>
+            <th>Exam Name</th>
+            <td>{{exam}}</td>
+        </tr>
+        <th>Subject</th>
+        <td>{{subject}}</td>
+        <tr>
+            <th>Marks Scored</th>
+            <td>{{program.marks_scored}}</td>
+        </tr>
+
+    </table>
+    {%else%}
+
+    {% ifequal offer_id 2%}
+    <br>
+    <h4> <b>Job Applied</b></h4>
+    <table class="table table-striped">
+
+        <tr>
+            <th>Name Of The Post</th>
+            <td>{{post}}</td>
+        </tr>
+
+
+    </table>
+    {% endifequal %}
+    {%endifequal%}
+    <br>
+    <h4> <b>Documents Uploaded</b></h4>
+    <table class="table table-striped">
+        {%for up in upload%}
+        <tr>
+            <th>{{up.upload_type}}</th>
+            
+            <td><embed height="300px" height="50%" width="50%" name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  mimetype="application/pdf;image/jpg"></td>
+        </tr>
+
+        {%endfor%}
+
+
+    </table>
+
+
+</div>
+
+{% endblock %}
+
+
+
+
+

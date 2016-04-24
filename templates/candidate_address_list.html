@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--{% extends "masterpage_candidate.html" %}-->
+{% load static %}
+{% block content %}
+<!--{% load url from future%}-->
+
+<div class="table-responsive">
+    <br>
+
+    <!--<h4 color="#e1e1e1"> <b>Work Experience</b></h4>-->
+    <table class="table table-striped">
+        <tr>
+            <th bgcolor="#e1e1e1"> Address Details</th><td bgcolor="#e1e1e1"></td>
+        <tr>
+            <td><li><a href="/candidate_address/per/{{roll_number}}">Permanent Address</a></li></td>
+        </tr>
+        <tr>
+            <td><li><a href="/candidate_address/cur/{{roll_number}}">Current Address</a></li></td>
+        </tr>
+
+    </table>
+    <!--<input type= "hidden" name='roll_number' value="{{roll_number}}" />-->
+
+</div>
+
+
+</div>
+</html>
+{%endblock%}

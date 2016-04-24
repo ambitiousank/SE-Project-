@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--{% extends "masterpage_candidate.html" %}-->
+{% load static %}
+{% block content %}
+<!--{% load url from future %}-->
+
+<div class="table-responsive">
+    <br>
+    <form method="POST" action=''>{% csrf_token %}
+        <!--<h4> <b>Educational Details</b></h4>-->
+        <table class="table table-striped">
+        </br></br></br></br></br></br></br>
+        <tr>
+            <td><p><b>I, {{roll_number}}, hereby declare that all the information provided by me is true and to the best of my knowledge.</b> </p></td>
+        </tr>
+            </b>
+        <tr>
+            <td><b>Caution:</b> Once submitted, the form cannot be changed.</br>So press submit button only when you are sure</p></td>
+        </tr>
+
+
+        </table>
+
+          {{subForm}}
+
+        </br>
+        <input type= "hidden" name='submission_status' value = '1' />
+        <input type= "hidden" name='roll_number' value="{{roll_number}}" />
+        <input type = 'submit' value = 'Submit'>
+
+    </form>
+
+</div>
+</html>
+{%endblock%}

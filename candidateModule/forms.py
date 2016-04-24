@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from staffmodule.models import PersonalDetail,EducationDetails, WorkExperience,\
-	AddressDetails,ProgramApplied,PostApplied,UploadDetails,PhotoFiles,SignatureFiles,XthMarksheets
+	AddressDetails,ProgramApplied,PostApplied,UploadDetails,User,SubmitStatus
 
 import os
 
@@ -27,8 +27,6 @@ class PersonalDetailForm(forms.ModelForm):
 		if not (provider == "iiitb.org" or provider == "iiitb.ac.in") :
 			raise forms.ValidationError("Please use your iiitb email id")
 		return email
-
-
 
 
 
@@ -93,88 +91,49 @@ class ProgramDetailForm (forms.ModelForm):
 		]
 
 
-
-class PhotoUploadForm (forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
-	#photograph_file=forms.FileField(upload_to = settings.MEDIA_ROOT, null=True)
+class FormSubmissionForm(forms.ModelForm):
+	roll_number=forms.CharField(widget = forms.HiddenInput(),required = False)
+	submission_status=forms.IntegerField(widget = forms.HiddenInput(), required = False)
 	class Meta:
-		model = PhotoFiles
+		model=SubmitStatus
+		fields=[
+			"submission_status",
+			"roll_number"
+			]
+
+
+class FileUploadForm (forms.ModelForm):
+	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
+	upload_type=forms.Field(widget = forms.HiddenInput(), required = False)
+	class Meta:
+		model = UploadDetails
 		fields = [#"education_type",
 			"roll_number",
-			"photograph_file",
+			"upload_type",
+			"upload_path"
 		]
+	def clean_upload_path(self):
+		upFile = self.cleaned_data.get('upload_path')
+		fileName = upFile.name
+		file_type=self.cleaned_data.get('upload_type')
 
-	def clean_photograph_file(self):
-		photoFile = self.cleaned_data.get('photograph_file')
-		fileName = photoFile.name
-
-		if  not ('.jpg' in fileName):
-			raise forms.ValidationError("Please upload a valid image file (.jpg file)")
-		else :
-
+		print "<<<<<Here is "+str(file_type)+">>>>>"
+		file_format='.pdf'
+		if file_type == '1' or file_type =='2':
+			file_format='.jpg'
+		if  not (file_format in fileName):
+			raise forms.ValidationError("Please upload a valid image file ("+file_format+")")
+		else:
 			rollno = self.cleaned_data.get('roll_number')
-			photoFile.name =str(rollno)+".jpg"
-			absoluteName = settings.MEDIA_ROOT+"/"+photoFile.name
+			upFile.name =file_type+"_"+str(rollno)+file_format
+
+			absoluteName = settings.DOWNLOAD_ROOT+"/"+upFile.name
 
 			if os.path.isfile(absoluteName):
 				os.remove(absoluteName)
-		return photoFile
+		return upFile
 
 
-
-
-
-
-
-class SigUploadForm (forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
-	class Meta:
-		model = SignatureFiles
-		fields = [#"education_type",
-			"roll_number",
-			"signature_file",
-		]
-	def clean_signature_file(self):
-		sigFile = self.cleaned_data.get('signature_file')
-		fileName = sigFile.name
-
-		if  not ('.jpg' in fileName):
-			raise forms.ValidationError("Please upload a valid image file (.jpg file)")
-		else :
-			rollno = self.cleaned_data.get('rollno')
-			docname="sig_"+rollno+".jpg"
-			if not (docname in fileName):
-				sigFile.name = docname
-				absoluteName = settings.MEDIA_ROOT+"/"+sigFile.name
-				if os.path.isfile(absoluteName):
-					os.remove(absoluteName)
-		return sigFile
-
-
-
-
-class XmUploadForm (forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
-	class Meta:
-		model = XthMarksheets
-		fields = [#"education_type",
-			"roll_number",
-			"xth_marksheet",
-		]
-	def xth_marksheet(self):
-		docFile = self.cleaned_data.get('docFile')
-		fileName = docFile.name
-		if not ('.pdf' in fileName):
-			raise forms.ValidationError("Please upload a valid document file (.pdf file)")
-		else :
-			rollno = self.cleaned_data.get('rollno')
-			docname="doc_"+rollno+".pdf"
-			if not (docname in fileName):
-				docFile.name = docname
-				absoluteName = settings.MEDIA_ROOT+"/"+docFile.name
-				if os.path.isfile(absoluteName):
-					os.remove(absoluteName)
-		return docFile
 
 
 
@@ -202,7 +161,6 @@ class EducationalDetailForm (forms.ModelForm):
 		if (percentage < 0 or percentage >100):
 			raise forms.ValidationError("Please correct the percentage (0-100 is the valid range)")
 		return percentage
-
 
 
 
