@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db import models
-from .models import AdmissionDetail,PersonalDetail,EducationDetails,AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef,ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails,AdminReference,PostApplied
+from .models import AdmissionDetail,PersonalDetail,EducationDetails,AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef,ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails,AdminReference,PostApplied,UploadTypeRef
 from .forms import validationForm,validationForm2
 from django.http import HttpResponsePermanentRedirect
 
@@ -81,8 +81,25 @@ def studentValidation(request,admission_id):
 	
 	upload=UploadDetails.objects.filter(roll_number=roll_number)
 
+	uploadObjects=[]
+
 	for k in upload:
 		print k.upload_path
+		uploadDesc=UploadTypeRef.objects.get(upload_type_id=k.upload_type)
+		uploadType=2
+		if 'pdf' in str(k.upload_path):
+			uploadType=1
+
+
+			#temp=UploadContext(uploadType)
+			#temp.Uploadpath=upload_path
+			#temp.desc=uploadDesc
+		print uploadType
+		#print k.upload_path
+		uploadObjects.append(UploadContext(uploadType,k.upload_path,uploadDesc.upload_type_desc	))
+
+
+
 		#print k.upload_type_id
 		#print k.upload_type_id.upload_type_desc
 		#nothing
@@ -108,7 +125,7 @@ def studentValidation(request,admission_id):
 	"program_name":program_name,
 	"filename":"downloads/k2.pdf",
 	"filename2":"downloads/MT2015020_HIghSchool.pdf",
-	"upload":upload
+	"uploadObjects":uploadObjects
 
 
 
@@ -156,6 +173,15 @@ def staffSearch(request):
 
 	}	
 	return render(request,"staff_search.html",vo)
+
+class UploadContext:
+	#Uploadpath="h"
+#desc=""
+	def __init__ (self,types, u,k):
+		self.types=types
+		self.Uploadpath=u
+		self.desc=k
+
 
 
 
