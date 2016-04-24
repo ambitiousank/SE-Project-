@@ -237,7 +237,12 @@ Female
 	<th>{{up.upload_type}}</th>
 <!-- 	<td><embed height="150%" width="100%"  name="plugin" src="{% static filename %}"  type="application/pdf"></td>
  -->
- <td><embed height="300px" width="100%"  name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  type="application/pdf"></td>
+ {% if "pdf" in up.upload_path %}
+ <td><embed height="300px" width="100%"  name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  type="application/pdf">
+ </td>
+ {%else%}
+ <td><img height="100px" width="100px"  src="{{ MEDIA_URL}}{{up.upload_path}}"  ></td>
+{%endif%}
  </tr>
 
 {%endfor%}
