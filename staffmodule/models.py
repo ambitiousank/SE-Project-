@@ -65,8 +65,8 @@ class AdmissionDetail(models.Model):
     admission_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32,unique=True)
     status_of_request=models.IntegerField(choices=STATUS_CHOICES, default=1)
-    validated_by=models.CharField(max_length=32)
-    validation_comments=models.CharField(max_length=400,blank=True)
+    validated_by=models.CharField(max_length=32,default='ok')
+    validation_comments=models.CharField(max_length=400,blank=True,default='NA')
     created_on=models.DateField(auto_now_add=True)
 
 
