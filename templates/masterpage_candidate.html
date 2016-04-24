@@ -35,7 +35,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Help</a></li>
+            <!--<li><a href="#">Help</a></li>-->
             <!--<li><a href="/templates">Form Templates</a></li>-->
             <li><a href="/">Logout</a></li>
           </ul>
@@ -56,7 +56,7 @@
             <li><a href="/candidate_academic_details/{{roll_number}}">Educational Details</a></li>
             <li><a href="/candidate_work_experience/{{roll_number}}">Work Experience</a></li>
             <li><a href="/candidate_address_details/{{roll_number}}">Address Details</a></li>
-            {%ifequal offer_id 1%}
+            {%ifequal form_template 1%}
                 <li><a href="/candidate_program_details/{{roll_number}}">Apply For a Program</a></li>
                 {%else%}
                 <li><a href="/candidate_job_details/{{roll_number}}">Apply For a Post</a></li>

@@ -20,9 +20,9 @@ from staffmodule.models import AdmissionDetail,PersonalDetail,EducationDetails, 
 # here we have to validate roll_number of a user in the url as well only then we'll allow access
 try:
     admin_ref =AdminReference.objects.get(reference_id=1)
-    offer_id=admin_ref.offer_id
+    form_template=admin_ref.form_template
 except ObjectDoesNotExist:
-    offer_id =1
+    form_template =1
 
 
 
@@ -75,7 +75,7 @@ def homeView(request, roll_number):
         context.update({"work_ex":work_experience})
 
     #if institute is offering admission
-    if offer_id==1:
+    if form_template==1:
         try:
             program_applied=ProgramApplied.objects.get(roll_number=roll_number)
         except ObjectDoesNotExist:
@@ -100,7 +100,7 @@ def homeView(request, roll_number):
             })
 
     #if institute is offering a job
-    elif offer_id==2:
+    elif form_template==2:
         try:
             post=PostApplied.objects.get(roll_number=roll_number)
         except ObjectDoesNotExist:
@@ -122,7 +122,7 @@ def homeView(request, roll_number):
 
     context.update({
         #"form":form,
-        "offer_id":offer_id,
+        "form_template":form_template,
         "filename":"/xth_"+roll_number+".pdf",
         "filename2":"/photo_"+roll_number+".jpg",
         "upload":upload
@@ -154,7 +154,7 @@ def fileUploadView(request,roll_number):
     context={
         "title" : title,
         "roll_number" : roll_number,
-        "offer_id":offer_id
+        "form_template":form_template
     }
 
     return render(request, "candidate_upload_file_list.html",  context)
@@ -247,7 +247,7 @@ def fileDetailsView(request,upload_doc,roll_number):
         "ufForm" :ufForm,
         "roll_number": roll_number,
         "upload_type":upload_type,
-        "offer_id":offer_id
+        "form_template":form_template
     }
     print ">>>before valid "
     print request.POST
@@ -272,7 +272,7 @@ def submitView(request, roll_number):
         "title" : title,
         "subForm" :subForm,
         "roll_number": roll_number,
-        "offer_id":offer_id
+        "form_template":form_template
     }
 
     print "<<<<<submit request>>>>>"
@@ -329,7 +329,7 @@ def jobDetailsView(request, roll_number):
         "title" : title,
         "jobDetailForm" :jdForm,
         "roll_number": roll_number,
-        "offer_id":offer_id
+        "form_template":form_template
     }
 
 
@@ -365,7 +365,7 @@ def personalDetailsView(request, roll_number):
         return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Candidate Personal Details"
-    context={"offer_id":offer_id,
+    context={"form_template":form_template,
              "title" : title,
              "roll_number" : roll_number,
              }
@@ -464,7 +464,7 @@ def addressDetailsView(request,roll_number):
     context={
         "title" : title,
         "roll_number" : roll_number,
-        "offer_id":offer_id
+        "form_template":form_template
     }
 
     return render(request, "candidate_address_list.html",  context)
@@ -492,7 +492,7 @@ def addressView(request,id,roll_number):
         "title" : title,
         "address":addressDetailsForm,
         "roll_number":roll_number,
-        "offer_id":offer_id,
+        "form_template":form_template,
         "address_type_name":address_type_name,
     }
     return render(request, "candidate_address_details.html", context)
@@ -621,7 +621,7 @@ def programDetailsView(request, roll_number):
         "title" : title,
         "programDetailForm" :programDetailForm,
         "roll_number": roll_number,
-        "offer_id":offer_id
+        "form_template":form_template
     }
 
 
@@ -675,7 +675,7 @@ def workExperienceView(request, roll_number):
     context={
         "title" : title,
         "roll_number": roll_number,
-        "offer_id":offer_id
+        "form_template":form_template
     }
 
 
@@ -751,7 +751,7 @@ def educationDetailsView(request,roll_number):
     context={
         "title" : title,
         "roll_number" : roll_number,
-         "offer_id":offer_id,
+         "form_template":form_template,
     }
 
     return render(request, "candidate_educational_details.html",  context)
@@ -781,7 +781,7 @@ def stdEducationDetailsView(request, id, roll_number):
         "roll_number" : roll_number,
         "title" : title,
         "edForm" : edForm,
-        "offer_id":offer_id,
+        "form_template":form_template,
     }
 
     return render(request, "candidate_std_details.html",context)
