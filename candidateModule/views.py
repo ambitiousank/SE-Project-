@@ -171,9 +171,6 @@ def fileDetailsView(request,upload_doc,roll_number):
     if submission_status ==1:
         return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/",{"submitted":"submitted"})
 
-        phForm=PhotoUploadForm(request.POST or None, initial={"photograph_file":ph})
-      else:
-        phForm=PhotoUploadForm(request.POST or None)
 
     print "<<<<<<fileDetails--request.POST>>>"
     print request.POST
@@ -257,8 +254,6 @@ def fileDetailsView(request,upload_doc,roll_number):
 
     transaction.commit()
     return render(request, "candidate_file_details.html",  context)
-
-        if xmEntries:
 
 def submitView(request, roll_number):
     try:
