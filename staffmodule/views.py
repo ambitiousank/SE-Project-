@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db import models
-from .models import AdmissionDetail,PersonalDetail,EducationDetails,AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef,ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails,AdminReference,PostApplied,UploadTypeRef
+from .models import AdmissionDetail,PersonalDetail,EducationDetails,AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef,ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails,AdminReference,PostApplied,UploadTypeRef,PostRef
 from .forms import validationForm,validationForm2
 from django.http import HttpResponsePermanentRedirect
 
@@ -55,9 +55,12 @@ def studentValidation(request,admission_id):
 	work_experience=WorkExperience.objects.filter(roll_number=roll_number)
 	master_ref=AdminReference.objects.get(reference_id=1)
 	master_decesion=master_ref.form_template
+	print master_decesion
+	print "is master def"
 	address=AddressDetails.objects.get(address_id=student_entry.current_address_id)
 	program=None
 	post=None
+	postDesc=None
 	exam=None
 	course=None
 	subject=None
@@ -72,6 +75,8 @@ def studentValidation(request,admission_id):
 		exam_desc=exam.exam_desc
 	else:
 		post=PostApplied.objects.get(roll_number=roll_number)
+		postD=PostRef.objects.get(post_id=post.post)
+		postDesc=postD.post_desc
 
 
 	
@@ -118,6 +123,7 @@ def studentValidation(request,admission_id):
 	"work_ex":work_experience,
 	"program":program,
 	"post":post,
+	"postDesc":postDesc,
 	"exam":exam_desc,
 	"course":course,
 	"subject":subject,
@@ -190,6 +196,5 @@ def parseDownloadString(string):
 	new='downloads/'+b
 	print new
 	return new
-
 
 
