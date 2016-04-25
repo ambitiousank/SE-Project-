@@ -2,12 +2,16 @@ from django.shortcuts import render
 from django.db import models
 from .models import AdmissionDetail,PersonalDetail,EducationDetails,AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef,ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails,AdminReference,PostApplied,UploadTypeRef,PostRef
 from .forms import validationForm,validationForm2
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect,HttpResponse
 
 
 # Create your views here.
 #function to fetch list of pending records
 def fetchPendingRequest(request):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
+
 	all_entries = AdmissionDetail.objects.filter(status_of_request__in=[1,4])
 
 	for i in all_entries:
@@ -23,6 +27,10 @@ def fetchPendingRequest(request):
 
 
 def studentValidation(request,admission_id):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
+
 	print "here"
 	print admission_id
 	roll_number=0
@@ -144,6 +152,10 @@ def submitComments(request):
 	return render(request,"home.html","")
 
 def staffSearch(request):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
+
 	form=validationForm2(request.POST or None)
 	search=[]
 	message=False
@@ -196,5 +208,23 @@ def parseDownloadString(string):
 	new='downloads/'+b
 	print new
 	return new
+def validateSession(request):
+	stringName="Staff"
+	staffString="Staff"
+	temp=request.session['role']
+	stringName=str(temp)
+
+	print "Strig name is"
+	print stringName
+	#get it from context
+	if stringName == staffString:
+		print "Valid"
+		return "Valid"
+	else:
+		print "Invalid"
+		return "Invalid" 
+
+		
+
 
 
