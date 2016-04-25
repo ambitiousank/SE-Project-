@@ -268,10 +268,10 @@
     <table class="table table-striped">
         {%for up in upload%}
         <tr>
-            <th>{{up.upload_type_id.upload_type_desc}}</th>
+            <th>{{up.upload_type}}</th>
             <!-- 	<td><embed height="150%" width="100%"  name="plugin" src="{% static filename %}"  type="application/pdf"></td>
              -->
-            <td><embed height="300px" width="100%"  name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  type="application/pdf"></td>
+            <td><embed height="300px" height="50%" width="50%" name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  mimetype="application/pdf;image/jpg"></td>
         </tr>
 
         {%endfor%}
