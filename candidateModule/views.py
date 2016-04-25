@@ -312,9 +312,10 @@ def submitView(request, roll_number):
     print "<<<<<submit request>>>>>"
     print request.POST
     if subForm.is_valid():
-        print "<<<<<Valid submit request>>>>>"
-        print request.POST
+        #print "<<<<<Valid submit request>>>>>"
 
+
+        print request.POST
         ss=SubmitStatus.objects.filter(roll_number=roll_number)
         print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
         print SubmitStatus._meta.get_fields(include_parents=True,include_hidden=True,)
@@ -329,6 +330,7 @@ def submitView(request, roll_number):
         print "<<<<<Valid submit request:::SAVED_USER>>>>>"
         print ss.pk
 
+        ## add entry in the admission details
         ad=AdmissionDetail.objects.filter(roll_number=roll_number)
         if ad:
             ad.status_of_request=SUBMITTED
@@ -337,6 +339,20 @@ def submitView(request, roll_number):
             ad=AdmissionDetail(roll_number=roll_number,status_of_request=SUBMITTED,validated_by="NA")
             ad.save(force_insert=True)
         transaction.commit()
+        ## END OF add entry in the admission details
+
+
+        ## Link Addresses in Personal Details
+        personalEntry=PersonalDetail.objects.filter(roll_number=roll_number)
+        if personalEntry:
+            perAdEntry=AddressDetails.objects.filter(roll_number=roll_number,address_type=PERMANENT_ADDRESS_TYPE)
+            if perAdEntry:
+                updateAddressInPersonalDetails(roll_number,PERMANENT_ADDRESS_TYPE)
+            curAdEntry=AddressDetails.objects.filter(roll_number=roll_number,address_type=CURRENT_ADDRESS_TYPE)
+            if curAdEntry:
+                updateAddressInPersonalDetails(roll_number,CURRENT_ADDRESS_TYPE)
+        ## END OF Link Addresses in Personal Details
+
         return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
     return render(request, "candidate_submit.html", context)
 
@@ -527,9 +543,7 @@ def addressView(request,id,roll_number):
 
     addressEntry = AddressDetails.objects.filter(roll_number=roll_number, address_type=address_type)
     addressDetailsForm = initiateAddressForm(address_type,request,addressEntry)
-
     request=saveAddress(roll_number,request,address_type,addressDetailsForm,addressEntry)
-    updateAddressInPersonalDetails(roll_number,address_type)
 
     context={
         "title" : title,
@@ -631,7 +645,6 @@ def saveAddress(roll_number, request, i,addressDetailForm,addressEntry):
             instance.pincode=pi
             instance.city= ci
             instance.save()
-
     transaction.commit()
     return (request)
 
