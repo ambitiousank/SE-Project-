@@ -1,28 +1,44 @@
 from django.shortcuts import render
 from django.db import transaction
 from django import forms
+from django.http import HttpResponseRedirect
+from django.core.exceptions import ObjectDoesNotExist
+
+
 from .forms import PersonalDetailForm, \
     EducationalDetailForm, WorkExperienceForm,AddressDetailForm,ProgramDetailForm,JobDetailForm, \
     FileUploadForm,FormSubmissionForm#,PhotoUploadForm
-from django.http import HttpResponsePermanentRedirect
-from django.core.exceptions import ObjectDoesNotExist
 
-#from .models import User
 from staffmodule.models import AdmissionDetail,PersonalDetail,EducationDetails, \
     AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef, \
     ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails, \
-    AdminReference,PostApplied,User,SubmitStatus
+    AdminReference,PostApplied,User,SubmitStatus,AddressRef,UploadTypeRef
 
 
-# Create your views here.
+
 
 
 # here we have to validate roll_number of a user in the url as well only then we'll allow access
+
+resAddType = AddressRef.objects.get(add_desc='residential')
+PERMANENT_ADDRESS_TYPE = resAddType.add_type_id
+
+curAddType = AddressRef.objects.get(add_desc='current')
+CURRENT_ADDRESS_TYPE = curAddType.add_type_id;
+
+
+ADMISSION_TYPE=1
+JOB_TYPE=2
+NOT_SUBMITTED=0
+SUBMITTED=1
+
+
+
 try:
     admin_ref =AdminReference.objects.get(reference_id=1)
     form_template=admin_ref.form_template
 except ObjectDoesNotExist:
-    form_template =1
+    form_template =ADMISSION_TYPE
 
 
 
@@ -35,19 +51,28 @@ html page. A candidate can verify how his/her information will look once the for
 
 """
 def homeView(request, roll_number):
+
     title="Candidate Details "
     context={"title":title,"roll_number": roll_number}
 
-    PERMANENT_ADDRESS_TYPE=0
-    CURRENT_ADDRESS_TYPE=1
+    resAddType=AddressRef.objects.get(add_desc='residential')
+    PERMANENT_ADDRESS_TYPE=resAddType.add_type_id;
+    print "PERMANENT_ADDRESS_TYPE===";print PERMANENT_ADDRESS_TYPE
+
+    curAddType=AddressRef.objects.get(add_desc='current')
+    CURRENT_ADDRESS_TYPE=curAddType.add_type_id;
+    print "CURRENT_ADDRESS_TYPE==";print CURRENT_ADDRESS_TYPE
+
     try:
         try:
             personal_details = PersonalDetail.objects.get(roll_number=roll_number.upper())
         except ObjectDoesNotExist:
             personal_details=PersonalDetail.objects.get(roll_number=roll_number.lower())
         context.update({"personal":personal_details})
+
     except ObjectDoesNotExist:
         pass
+
     else:
         try:
             category_details= CategoryRef.objects.get(category_id =personal_details.category_id)
@@ -75,7 +100,7 @@ def homeView(request, roll_number):
         context.update({"work_ex":work_experience})
 
     #if institute is offering admission
-    if form_template==1:
+    if form_template==ADMISSION_TYPE:
         try:
             program_applied=ProgramApplied.objects.get(roll_number=roll_number)
         except ObjectDoesNotExist:
@@ -100,7 +125,7 @@ def homeView(request, roll_number):
             })
 
     #if institute is offering a job
-    elif form_template==2:
+    elif form_template==JOB_TYPE:
         try:
             post=PostApplied.objects.get(roll_number=roll_number)
         except ObjectDoesNotExist:
@@ -113,12 +138,9 @@ def homeView(request, roll_number):
     for k in upload:
         path,filename=k.upload_path.name.split('/media/')
         k.upload_path=filename
+        print "<<<<Upload Type>>>"
         print k.upload_type
 	    #print k.upload_type.upload_type_desc
-
-
-
-
 
     context.update({
         #"form":form,
@@ -131,9 +153,9 @@ def homeView(request, roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
+    if submission_status ==SUBMITTED:
          return render (request,"candidate_form_disabled.html",context)
 
     return render (request, "candidate_home.html",context)
@@ -145,10 +167,10 @@ def fileUploadView(request,roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title= "File Upload List"
     context={
@@ -166,10 +188,10 @@ def fileDetailsView(request,upload_doc,roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/",{"submitted":"submitted"})
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/",{"submitted":"submitted"})
 
 
     print "<<<<<<fileDetails--request.POST>>>"
@@ -177,47 +199,57 @@ def fileDetailsView(request,upload_doc,roll_number):
 
     if upload_doc=="photo":
         uploaded_doc='Photograph'
-        upload_type=1
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="sign":
         uploaded_doc='Signature'
-        upload_type=2
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="xm":
         uploaded_doc='Xth Marksheet'
-        upload_type=3
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="xc":
         uploaded_doc='Xth Certificate'
-        upload_type=4
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="xiim":
         uploaded_doc='XIIth Marksheet'
-        upload_type=5
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="xiic":
         uploaded_doc='XIIth Certificate'
-        upload_type=6
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="gm":
         uploaded_doc='Graduation Marksheet'
-        upload_type=7
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="gc":
         uploaded_doc='Graduation Certificate'
-        upload_type=8
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="sc":
         uploaded_doc='Gate Score Card'
-        upload_type=9
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     elif upload_doc=="ss":
         uploaded_doc='Salary Slip'
-        upload_type=10
+        upload_type=UploadTypeRef.objects.get(upload_type_desc=uploaded_doc)
+        upload_type_id=upload_type.upload_type_id
 
     else:
         uploaded_doc=''
-        upload_type=0
+        upload_type_id=0
 
     title= uploaded_doc+" Upload Details"
 
@@ -229,15 +261,17 @@ def fileDetailsView(request,upload_doc,roll_number):
     if ufForm.is_valid():
 
         try:
-            fileEntry=UploadDetails.objects.get(roll_number=roll_number, upload_type=upload_type)
+            fileEntry=UploadDetails.objects.get(roll_number=roll_number, upload_type=upload_type_id)
             upload_path = request.FILES["upload_path"]
             fileEntry.upload_path=upload_path
+
             print "<<<<fileEntry:::PK>>>>"
             print fileEntry._get_pk_val()
+
             fileEntry.save(force_update=True,update_fields=["upload_path"])
 
         except ObjectDoesNotExist:
-            uf=UploadDetails(roll_number=roll_number,upload_path = request.FILES["upload_path"],upload_type=upload_type)
+            uf=UploadDetails(roll_number=roll_number,upload_path = request.FILES["upload_path"],upload_type=upload_type_id)
             uf.save()
 
 
@@ -246,7 +280,7 @@ def fileDetailsView(request,upload_doc,roll_number):
         "title" : title,
         "ufForm" :ufForm,
         "roll_number": roll_number,
-        "upload_type":upload_type,
+        "upload_type":upload_type_id,
         "form_template":form_template
     }
     print ">>>before valid "
@@ -260,10 +294,10 @@ def submitView(request, roll_number):
         subStatus = SubmitStatus.objects.get(roll_number=roll_number)
         submission_status = subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Submission Form"
     subForm=FormSubmissionForm(request.POST or None)
@@ -278,7 +312,6 @@ def submitView(request, roll_number):
     print "<<<<<submit request>>>>>"
     print request.POST
     if subForm.is_valid():
-
         print "<<<<<Valid submit request>>>>>"
         print request.POST
 
@@ -287,16 +320,24 @@ def submitView(request, roll_number):
         print SubmitStatus._meta.get_fields(include_parents=True,include_hidden=True,)
         if ss:
             ss.roll_number=roll_number
-            ss.submission_status=1
+            ss.submission_status=SUBMITTED
             ss.save(force_update=True)
         else:
-            ss=SubmitStatus(roll_number=roll_number, submission_status=1)
+            ss=SubmitStatus(roll_number=roll_number, submission_status=SUBMITTED)
             ss.save(force_insert=True)
-            print "<<<<<Valid submit request:::SAVED_USER>>>>>"
-            print ss.pk
-
         transaction.commit()
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+        print "<<<<<Valid submit request:::SAVED_USER>>>>>"
+        print ss.pk
+
+        ad=AdmissionDetail.objects.filter(roll_number=roll_number)
+        if ad:
+            ad.status_of_request=SUBMITTED
+            ad.save(force_update=True,updated_fields=["status_of_request"])
+        else:
+            ad=AdmissionDetail(roll_number=roll_number,status_of_request=SUBMITTED,validated_by="NA")
+            ad.save(force_insert=True)
+        transaction.commit()
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
     return render(request, "candidate_submit.html", context)
 
 
@@ -306,10 +347,10 @@ def jobDetailsView(request, roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Program Applying For"
     jobDetailEntry=PostApplied.objects.filter(roll_number=roll_number)
@@ -359,10 +400,10 @@ def personalDetailsView(request, roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Candidate Personal Details"
     context={"form_template":form_template,
@@ -379,7 +420,6 @@ def personalDetailsView(request, roll_number):
         phone_number='';pan_card='';email_id='';
 
         for pd_entry in pd_entries:
-            print "<>IOUOUYUI^&^&^(^(^"
             roll_number     = pd_entry.roll_number
             full_name       = pd_entry.full_name
             father_name     = pd_entry.father_name
@@ -455,10 +495,10 @@ def addressDetailsView(request,roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title= "Address List"
     context={
@@ -476,18 +516,21 @@ def addressView(request,id,roll_number):
 
     title="Address Details"
     if id == 'per':
-        address_type=0
-        address_type_name='Permanent'
+        address_type_name = "Permanent"
+        address_type = PERMANENT_ADDRESS_TYPE
     elif id == 'cur':
-        address_type=1
-        address_type_name='Current'
+        address_type_name = "Current"
+        address_type = CURRENT_ADDRESS_TYPE
 
+    print "<<<<address_type from DB>>>>"
+    print address_type
 
-    addressEntry=AddressDetails.objects.filter(roll_number=roll_number, address_type=address_type)
-    addressDetailsForm=initiateAddressForm(address_type,request,addressEntry)
+    addressEntry = AddressDetails.objects.filter(roll_number=roll_number, address_type=address_type)
+    addressDetailsForm = initiateAddressForm(address_type,request,addressEntry)
 
     request=saveAddress(roll_number,request,address_type,addressDetailsForm,addressEntry)
-    updateAddressInPersonalDetails(roll_number,address_type,addressEntry)
+    updateAddressInPersonalDetails(roll_number,address_type)
+
     context={
         "title" : title,
         "address":addressDetailsForm,
@@ -498,42 +541,52 @@ def addressView(request,id,roll_number):
     return render(request, "candidate_address_details.html", context)
 
 
-def updateAddressInPersonalDetails(roll_number,address_type,addressEntry):
 
-    if addressEntry:
-        pass
+##
+
+def updateAddressInPersonalDetails(roll_number,address_type):
+
+
+    print "<<<addressType>>>"
+    print address_type
+
+
+    if address_type == PERMANENT_ADDRESS_TYPE:
+
+        perDetail=PersonalDetail.objects.get(roll_number=roll_number)
+        latestPerAddressEntry = AddressDetails.objects.get(roll_number=roll_number, address_type=PERMANENT_ADDRESS_TYPE)
+        print "perDetail.residential_address_id"
+        print perDetail.residential_address_id
+        print "latestPerAddressEntry.address_id"
+        print latestPerAddressEntry.address_id
+        if (perDetail.residential_address_id != latestPerAddressEntry.address_id):
+             perDetail.residential_address_id=latestPerAddressEntry.address_id
+             print "residential_address_id"
+             print perDetail.residential_address_id
+             perDetail.save(force_update=True,update_fields=["residential_address_id"])
+             transaction.commit()
+    elif address_type == CURRENT_ADDRESS_TYPE:
+        perDetail=PersonalDetail.objects.get(roll_number=roll_number)
+        latestCurAddressEntry = AddressDetails.objects.get(roll_number=roll_number, address_type=CURRENT_ADDRESS_TYPE)
+        if (perDetail.current_address_id != latestCurAddressEntry.address_id):
+             perDetail.current_address_id = latestCurAddressEntry.address_id
+             perDetail.save(force_update=True,update_fields=["current_address_id"])
+             transaction.commit()
     else:
-        try:
-            perDetail=PersonalDetail.objects.get(roll_number=roll_number)
-        except ObjectDoesNotExist:
-            pass
-        else:
-            address_id=0
-            if address_type == 0:
-                for ae in addressEntry:
-                    address_id=ae.address_id
-                residential_address_id=address_id
-                perDetail.save(force_update=True,update_fields=["residential_address_id"])
-            elif address_type == 1:
-                for ae in addressEntry:
-                    address_id=ae.address_id
-                current_address_id = address_id
-                perDetail.save(force_update=True,update_fields=["current_address_id"])
-            transaction.commit()
+        pass
     return()
 
 def initiateAddressForm(address_type,request, addressEntry):
 
     if addressEntry:
-        for cae in addressEntry:
-            address_type =cae.address_type
-            address1 = cae.address1
-            address2 = cae.address2
-            address3 = cae.address3
-            state = cae.state
-            print state
-            pincode= cae.pincode
-            city = cae.city
+        for ae in addressEntry:
+            address_type =ae.address_type
+            address1 = ae.address1
+            address2 = ae.address2
+            address3 = ae.address3
+            state = ae.state
+            pincode= ae.pincode
+            city = ae.city
 
         address_db={
             "address_type" : address_type,
@@ -587,10 +640,10 @@ def programDetailsView(request, roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Program Applying For"
     programDetailEntry=ProgramApplied.objects.filter(roll_number=roll_number)
@@ -664,10 +717,10 @@ def workExperienceView(request, roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title = "Candidate Work Experience"
     workExperienceEntry=None
@@ -742,10 +795,10 @@ def educationDetailsView(request,roll_number):
         subStatus =SubmitStatus.objects.get(roll_number=roll_number)
         submission_status=subStatus.submission_status
     except ObjectDoesNotExist:
-        submission_status =0
+        submission_status =NOT_SUBMITTED
 
-    if submission_status ==1:
-        return HttpResponsePermanentRedirect("/candidate_home/"+roll_number+"/")
+    if submission_status ==SUBMITTED:
+        return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
 
     title= "Education Details"
     context={
