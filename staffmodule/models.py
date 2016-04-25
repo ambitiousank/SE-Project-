@@ -243,7 +243,7 @@ class AdminReference(models.Model):
         (1, "Admission"),
         (2, "Job")
     )
-    reference_id=models.PositiveSmallIntegerField(primary_key=True,default=1)
+    reference_id=models.AutoField(primary_key=True)
     form_template=models.PositiveSmallIntegerField(choices=template_choice,default=1)
     created_by=models.CharField(max_length=32)
     created_on=models.DateField(auto_now_add=True)
