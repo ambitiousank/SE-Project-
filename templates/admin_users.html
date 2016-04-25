@@ -2,7 +2,7 @@
 
 {% block content %}
 
-          <h1 class="sub-header">User Requests</h1>
+          <h1 class="sub-header">System Users</h1>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -11,6 +11,7 @@
                   <th>Email</th>
                   <th>Role</th>
                   <th>Status</th>
+                  <th>Comments</th>
                 </tr>
               </thead>
               <tbody>
@@ -18,12 +19,20 @@
                {% for item in all_entries %}
                 <tr> 
                 <td>{{ item.name }}</td>
-                <td><a href=/userDetailForm/{{item.email}}> {{ item.email }}</a></td> 
+                <td>{{ item.email }}</td> 
                 <td>{{ item.role }}</td>
                 <td>{%ifequal item.approve "3"%}
                     Pending
+                    {%else%}
+                    {%ifequal item.approve "2"%}
+                    Declined
+                    {%else%}
+                    Approved
                     {%endifequal%}
+                    {%endifequal%}
+                  
                 </td>
+                <td>{{ item.comment }}</td>
                 </tr>              
                {% endfor %} 
               </tbody>

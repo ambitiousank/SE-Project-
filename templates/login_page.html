@@ -9,6 +9,7 @@
 
 <div class="login-card">
 <form method='POST' action=''>{% csrf_token %}   <!--GET when using a webpage for dat, POST when sending some data-->
+{{error}}
 
 {{ form.as_p}}
 
