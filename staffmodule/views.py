@@ -85,9 +85,10 @@ def studentValidation(request,admission_id):
 
 	for k in upload:
 		print k.upload_path
+		z=parseDownloadString(str(k.upload_path))
 		uploadDesc=UploadTypeRef.objects.get(upload_type_id=k.upload_type)
 		uploadType=2
-		if 'pdf' in str(k.upload_path):
+		if 'pdf' in str(z):
 			uploadType=1
 
 
@@ -96,7 +97,7 @@ def studentValidation(request,admission_id):
 			#temp.desc=uploadDesc
 		print uploadType
 		#print k.upload_path
-		uploadObjects.append(UploadContext(uploadType,k.upload_path,uploadDesc.upload_type_desc	))
+		uploadObjects.append(UploadContext(uploadType,z,uploadDesc.upload_type_desc	))
 
 
 
@@ -182,6 +183,13 @@ class UploadContext:
 		self.Uploadpath=u
 		self.desc=k
 
+def parseDownloadString(string):
+	a,b=string.split('downloads/')
+	print a
+	print b
+	new='downloads/'+b
+	print new
+	return new
 
 
 
