@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .forms import PersonForm, EducationForm, AddressForm, ProgramForm, WorkForm, PostForm, validationForm, adminForm
 from module1.models import SignUp, MatchRef
+from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponse
 
 # Create your views here.
 def main(request):
@@ -9,6 +11,8 @@ def main(request):
 
 	if form.is_valid():
 		instance=form.save(commit=False)
+		if 'name' in request.session:
+			instance.created_by=request.session['name']
 		instance.save()
 
 	context ={
@@ -18,17 +22,18 @@ def main(request):
 	return render(request,"admin_page.html",context)
 
 
+
+
 def template(request):
 	
 	return render(request,"admin_templates.html",{})
 
-def users(request):
+def userReq(request):
 
 	all_entries = SignUp.objects.all()
 	name=[p.name for p in all_entries]
 	email=[p.email for p in all_entries]
 	role=[p.role for p in all_entries]
-	form = validationForm(request.POST or None) 
 
 	for p in all_entries:
 		check= MatchRef.objects.filter(email=p.email)
@@ -39,23 +44,58 @@ def users(request):
 		p.save()
 
 
-	all_entries = SignUp.objects.all()
-	
-	if request.method == 'POST':
-		print "valid"
-		k= request.POST.getlist('Action')
-		c= request.POST.getlist('Comments')
-		print k
-		all_entries.update(approve=k)
-		#return render(request,"staff","")
+	all_entries = SignUp.objects.filter(approve='3')	
 
 
 	context ={
-		"all_entries":all_entries,
-		"form":form   
+		"all_entries":all_entries,  
 	}
 	
 	return render(request,"admin_requests.html",context)
+
+
+
+def userValidation(request,email):	
+
+	entry = SignUp.objects.filter(email=email)
+	init_comments=''
+	init_status=3
+
+	form=validationForm(request.POST or None,initial={'Comments': init_comments,'Action':init_status})
+
+	if form.is_valid():
+		k= request.POST['Action']
+		c= request.POST['Comments']
+		entry.update(approve=k) 
+		entry.update(comment=c) 
+		return HttpResponsePermanentRedirect("/admin_req/")
+
+
+	name=entry.values_list('name')[0][0]
+	email=entry.values_list('email')[0][0]
+	role=entry.values_list('role')[0][0]
+	match=entry.values_list('match')[0][0]
+
+	context={
+	"name":name,
+	"email":email,
+	"role":role,
+	"match":match,
+	"form":form,
+	}
+	return render(request,"userDetailForm.html",context)
+
+
+def users(request):
+
+	all_entries = SignUp.objects.all()	
+	context ={
+		"all_entries":all_entries,
+	}
+	
+	return render(request,"admin_users.html",context)
+
+
 	
 
 def formTemplate1(request):
@@ -70,29 +110,6 @@ def formTemplate1(request):
 	sub_form4 = WorkForm(request.POST or None, prefix="work") 
 
 	#form.fields.widget.attrs['readonly'] = True
-
-	
-	'''
-	if form.is_valid() and sub_form1.is_valid() and sub_form2.is_valid() and sub_form3.is_valid() and sub_form4.is_valid():
-		personal=form.save(commit=False)
-		address=sub_form1.save(commit=False)
-		education=sub_form2.save(commit=False)
-		program=sub_form3.save(commit=False)
-		work=sub_form4.save(commit=False)
-		
-		#handle dependencies between the tables
-		address.roll_number=personal.roll_number		
-		personal.current_address_id=address.save()   #add foreign key
-		personal.save()
-		education.roll_number=personal.roll_number
-		education.save()
-		program.roll_number=personal.roll_number
-		program.save()
-		work.roll_number=personal.roll_number
-		work.save()
-
-		return render(request,"success.html",{})
-	'''
 
 
 	context ={
@@ -130,3 +147,4 @@ def formTemplate2(request):
 
 	}
 	return render(request,"admin_template2.html",context)
+
