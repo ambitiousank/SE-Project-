@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import SignUp
 from .forms import SignUpForm, login
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def sign(request):
