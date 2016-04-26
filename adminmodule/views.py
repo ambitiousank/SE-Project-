@@ -6,6 +6,11 @@ from django.http import HttpResponse
 
 # Create your views here.
 def main(request):
+
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
+
 	
 	form = adminForm(request.POST or None) 
 
@@ -25,10 +30,16 @@ def main(request):
 
 
 def template(request):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
 	
 	return render(request,"admin_templates.html",{})
 
 def userReq(request):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
 
 	all_entries = SignUp.objects.all()
 	name=[p.name for p in all_entries]
@@ -56,6 +67,9 @@ def userReq(request):
 
 
 def userValidation(request,email):	
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
 
 	entry = SignUp.objects.filter(email=email)
 	init_comments=''
@@ -87,6 +101,9 @@ def userValidation(request,email):
 
 
 def users(request):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
 
 	all_entries = SignUp.objects.all()	
 	context ={
@@ -99,6 +116,10 @@ def users(request):
 	
 
 def formTemplate1(request):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
+
 	title= "User Registration: Admission Template"
 
 	#adding a form
@@ -125,6 +146,10 @@ def formTemplate1(request):
 
 
 def formTemplate2(request):
+	result=validateSession(request)
+	if result is "Invalid":
+		return HttpResponsePermanentRedirect("/login/")
+
 	title= "User Registration: Job Template"
 
 	#adding a form
@@ -148,3 +173,25 @@ def formTemplate2(request):
 	}
 	return render(request,"admin_template2.html",context)
 
+
+#to handle session on logout
+def validateSession(request):
+	stringName="Admin"
+	adminString="Admin"
+	try:
+
+		temp=request.session['role']
+		stringName=str(temp)
+
+		print "String name is"
+		print stringName
+	#get it from context
+		if stringName == adminString:
+			print "Valid"
+			return "Valid"
+		else:
+			print "Invalid"
+			return "Invalid" 
+	except:
+			print "Error"
+			return "Invalid"
