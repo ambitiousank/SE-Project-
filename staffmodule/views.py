@@ -211,20 +211,24 @@ def parseDownloadString(string):
 def validateSession(request):
 	stringName="Staff"
 	staffString="Staff"
-	temp=request.session['role']
-	stringName=str(temp)
+	try:
+		temp=request.session['role']
+		stringName=str(temp)
 
-	print "Strig name is"
-	print stringName
+		print "Strig name is"
+		print stringName
 	#get it from context
-	if stringName == staffString:
-		print "Valid"
-		return "Valid"
-	else:
-		print "Invalid"
-		return "Invalid" 
+		if stringName == staffString:
+			print "Valid"
+			return "Valid"
+		else:
+			print "Invalid"
+			return "Invalid" 
 
-		
+	except:
+		print  "error"
+		return "Invalid"
+
 
 
 
