@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{title}}</h1>
 <div class="table-responsive">
-    <h4 style="color:red;">[NOT Submitted]</p></h4>
+    <h4 style="color:red;">[{{status}}]</p></h4>
     <br>
     <h4> <b>Personal Details</b></h4>
     <table class="table table-striped">
@@ -221,7 +221,7 @@
     </table>
 
 
-    {% ifequal offer_id 1%}
+    {% ifequal form_template 1%}
     <br>
     <h4> <b>Program Applied</b></h4>
     <table class="table table-striped">
@@ -248,14 +248,14 @@
     </table>
     {%else%}
 
-    {% ifequal offer_id 2%}
+    {% ifequal form_template 2%}
     <br>
     <h4> <b>Job Applied</b></h4>
     <table class="table table-striped">
 
         <tr>
             <th>Name Of The Post</th>
-            <td>{{post}}</td>
+            <td>{{post.post_desc}}</td>
         </tr>
 
 
@@ -267,7 +267,11 @@
     <table class="table table-striped">
         {%for up in upload%}
         <tr>
-            <th>{{up.upload_type}}</th>
+            {%for ref in uploadRef %}
+                {%ifequal ref.upload_type_id up.upload_type %}
+                  <th>{{ref.upload_type_desc}}</th>
+                {%endifequal%}
+            {%endfor%}
             <td><embed height="300px" height="50%" width="50%" name="plugin" src="{{ MEDIA_URL}}{{up.upload_path}}"  mimetype="application/pdf;image/jpg"></td>
         </tr>
 

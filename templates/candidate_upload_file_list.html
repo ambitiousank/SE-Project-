@@ -43,18 +43,18 @@
             <tr>
                 <td><li><a href="/candidate_gc_upload/gc/{{roll_number}}">Graduate Certificate</a></li></td>
             </tr>
-
+            {%ifequal form_template 1%}
             <tr>
                 <td><li><a href="/candidate_sc_upload/sc/{{roll_number}}">Score Card</a></li></td>
             </tr>
-
+            {%else%}
             <tr>
             <td><li><a href="/candidate_ss_upload/ss/{{roll_number}}">Salary Slip</a></li></td>
             </tr>
-
+            {%endifequal%}
         </table>
         <!--<input type= "hidden" name='roll_number' value="{{roll_number}}" />-->
-
+        <input type="button" name="done" value="Done" onclick="window.location='/candidate_home/{{roll_number}}/';" />
 
 </div>
 

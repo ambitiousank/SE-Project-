@@ -75,7 +75,18 @@
       {% block content %}
           {% endblock %}
 
+        {% if messages %}
+        <div class="span12">
+          {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
 
+                <h5 style="color:red;">{{ message|linebreaks}}</h5>
+
+              </div>
+
+          {% endfor %}
+        </div>
+        {% endif %}
       <!--<h1 class="sub-header">Candidate Details</h1>-->
           <!--<link rel="import" href="candidateDetailsForm.html">-->
               <!---->

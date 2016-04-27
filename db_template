@@ -17,6 +17,14 @@
   },
   {
     "model": "staffmodule.categoryref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "category_id": 0,
+      "category_desc": "Select"
+    }
+  },
+  {
+    "model": "staffmodule.categoryref",
     "pk": 1,
     "fields": { "created_on": date_now,
       "category_id": 1,
@@ -48,6 +56,23 @@
     "fields": { "created_on": date_now,
       "category_id": 4,
       "category_desc": "OBC"
+    }
+  },{
+
+    "model": "staffmodule.categoryref",
+    "pk": 5,
+    "fields": { "created_on": date_now,
+      "category_id": 5,
+      "category_desc": "Others"
+    }
+  },
+  {
+
+    "model": "staffmodule.courseref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "course_id": 0,
+      "course_desc": "Select"
     }
   },
   {
@@ -96,6 +121,15 @@
     }
   },
   {
+
+    "model": "staffmodule.examref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "exam_id":0,
+      "exam_desc": "Select"
+    }
+  },
+  {
     
     "model": "staffmodule.examref",
     "pk": 1,
@@ -123,6 +157,15 @@
     }
   },
   {
+
+    "model": "staffmodule.examsubjectref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "exam_subject_id":0,
+      "exam_subject_desc": "Select"
+    }
+  },
+  {
     
     "model": "staffmodule.examsubjectref",
     "pk": 1,
@@ -138,6 +181,15 @@
     "fields": { "created_on": date_now,
       "exam_subject_id":2,
       "exam_subject_desc": "ECE"
+    }
+  },
+  {
+
+    "model": "staffmodule.genderref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "gender_id":0,
+      "gender_desc": "Select"
     }
   },
   {
@@ -165,6 +217,15 @@
     "fields": { "created_on": date_now,
       "gender_id":3,
       "gender_desc": "Others"
+    }
+  },
+  {
+
+    "model": "staffmodule.postref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "post_id":0,
+      "post_desc": "Select"
     }
   },
   {
@@ -201,6 +262,15 @@
     "fields": { "created_on": date_now,
       "post_id":4,
       "post_desc": "IT"
+    }
+  },
+   {
+
+    "model": "staffmodule.programref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "program_id":0,
+      "program_desc": "Select"
     }
   },
   {
@@ -246,6 +316,15 @@
     "fields": { "created_on": date_now,
       "program_id":5,
       "program_desc": "Phd"
+    }
+  },
+  {
+
+    "model": "staffmodule.stateref",
+    "pk": 0,
+    "fields": { "created_on": date_now,
+      "state_id":0,
+      "state_desc":"Select"
     }
   },
   {
@@ -647,7 +726,7 @@
     "pk": 9,
     "fields": { "created_on": date_now,
       "upload_type_id":9,
-      "upload_type_desc":"Gate Score Card"
+      "upload_type_desc":"Score Card"
     }
   },
   {

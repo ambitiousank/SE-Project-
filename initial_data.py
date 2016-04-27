@@ -1,5 +1,3 @@
-#!/user/bin/python
-
 import time
 import os
 import sys
@@ -19,7 +17,7 @@ fileToSearch  = BASE_DIR+"/db_template"
 fileToSave    = BASE_DIR+"/initial_db.json"
 #fileToSearch = 'D:\dummy1.txt'
 
-tempFile = open( fileToSave, 'r+' )
+tempFile = open( fileToSave, 'w+' )
 
 for line in fileinput.input( fileToSearch ):
     tempFile.write( line.replace( textToSearch, textToReplace ) )
