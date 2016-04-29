@@ -22,6 +22,7 @@ from django.conf import settings
 urlpatterns = [
 	url(r'^$', 'module1.views.sign', name="sign"),
 	url(r'^login/', 'module1.views.login1', name="login1"),
+	url(r'^logsout/$','adminmodule.views.logsout',name='logout'),
 
 
 	url(r'^staff/$','staffmodule.views.fetchPendingRequest',name='staffDashboard'),
