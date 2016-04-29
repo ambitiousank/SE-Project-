@@ -115,12 +115,12 @@ class AddressDetails(models.Model):
     address_id=models.AutoField(primary_key=True)
     address_type=models.IntegerField(blank=True,default=1)
     roll_number=models.CharField(max_length=32)
-    address1=models.CharField(max_length=100,blank=False)
-    address2=models.CharField(max_length=100,blank=True)
-    address3=models.CharField(max_length=100,blank=True)
+    address1=models.CharField(max_length=100,blank=False,help_text="for example: 26/C Electronic city")
+    address2=models.CharField(max_length=100,blank=True,help_text="for example: Opposite to Infosys gate 1")
+    address3=models.CharField(max_length=100,blank=True,help_text="for example: Hosur Road")
     state=models.IntegerField(choices=STATE_CHOICES,default=0)
-    pincode=models.CharField(max_length=6)
-    city=models.CharField(max_length=50)
+    pincode=models.PositiveIntegerField(max_length=6,help_text="Six digit zip/pin code like 560100")
+    city=models.CharField(max_length=50,help_text="for example: Bangalore")
 
 class PersonalDetail(models.Model):
     GENDER_CHOICES = (
@@ -139,16 +139,16 @@ class PersonalDetail(models.Model):
     )
 
     roll_number=models.CharField(max_length=32,unique=True,primary_key=True)
-    full_name=models.CharField(max_length=32)
-    father_name=models.CharField(max_length=32)
-    mother_name=models.CharField(max_length=32)
-    date_of_birth=models.DateField()
+    full_name=models.CharField(max_length=32,help_text="As mentioned in highschool certificate")
+    father_name=models.CharField(max_length=32,help_text="Without Title (Mr., Dr. etc)")
+    mother_name=models.CharField(max_length=32,help_text="Without Title (Mrs., Dr. etc)")
+    date_of_birth=models.DateField(help_text="format yyyy-mm-dd (like 2000-12-19)")
     gender=models.IntegerField(choices=GENDER_CHOICES,default=0)
-    nationality=models.CharField(max_length=32)
+    nationality=models.CharField(max_length=32,help_text="for example: Indian")
     category_id=models.IntegerField(choices=CATEGORY_CHOICES,default=0)
-    phone_number=models.CharField(max_length=10)
-    pan_card=models.CharField(max_length=32,blank=True)
-    email_id=models.EmailField()
+    phone_number=models.CharField(max_length=10,help_text="10 didgit mobile number without country code")
+    pan_card=models.CharField(max_length=32,blank=True,help_text="Issued by GOI, Optional for freshers")
+    email_id=models.EmailField(help_text="email id provided by the institute")
     residential_address_id=models.IntegerField(default=0)
     current_address_id=models.IntegerField(default=0)
 
@@ -163,21 +163,21 @@ class EducationDetails(models.Model):
     education_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
     education_type=models.IntegerField(choices=EDUCATION_CHOICES, default=1)
-    percentage=models.DecimalField(max_digits=4,decimal_places=2)
-    board_university=models.CharField(max_length=32)
-    institute=models.CharField(max_length=32)
+    percentage=models.DecimalField(max_digits=4,decimal_places=2,help_text="Upto two decimal places (like 74.20)")
+    board_university=models.CharField(max_length=32,help_text="Name of university or board")
+    institute=models.CharField(max_length=32,help_text="Name of the institute")
     year_of_passing=models.IntegerField(default=2000)
 
 
 class WorkExperience(models.Model):
     workEx_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
-    last_organisation=models.CharField(max_length=100,blank=False)
-    position=models.CharField(max_length=100,blank=False)
-    job_description=models.CharField(max_length=100,blank=False)
-    start_year=models.IntegerField(default=2000)
-    end_year=models.IntegerField(default=2016)
-    duration=models.IntegerField()
+    last_organisation=models.CharField(max_length=100,blank=False,help_text="NA if not applicable")
+    position=models.CharField(max_length=100,blank=False,help_text="NA if not applicable")
+    job_description=models.CharField(max_length=100,blank=False,help_text="NA if not applicable")
+    start_year=models.IntegerField(default=2000,help_text="Starting year of the FIRST JOB ")
+    end_year=models.IntegerField(default=2016,help_text="Ending year of the LAST JOB ")
+    duration=models.IntegerField(help_text="Number of months of total work experience")
 
 class ProgramApplied(models.Model):
     PROGRAM_CHOICES = (
@@ -211,7 +211,7 @@ class ProgramApplied(models.Model):
     course_id=models.IntegerField(choices=COURSE_CHOICES,default=0)
     exam_name_id=models.IntegerField(choices=EXAM_CHOICES,default=0)
     exam_subject_id=models.IntegerField(choices=SUBJECT_CHOICES,default=0)
-    marks_scored=models.DecimalField(max_digits=4,decimal_places=2)
+    marks_scored=models.DecimalField(max_digits=6,decimal_places=2,help_text="Upto two decimal places")
 
 class PostApplied(models.Model):
     POST_CHOICES = (
@@ -230,12 +230,10 @@ class PostApplied(models.Model):
 
 class UploadDetails(models.Model):
 
-    
-
     upload_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
     upload_type=models.IntegerField(UploadTypeRef)
-    upload_path=models.FileField(upload_to=settings.DOWNLOAD_ROOT)
+    upload_path=models.FileField(upload_to=settings.DOWNLOAD_ROOT,help_text="Formats: Photograph and Signature =jpg, others= pdf")
 
 ###New class
 class AdminReference(models.Model):
@@ -243,7 +241,7 @@ class AdminReference(models.Model):
         (1, "Admission"),
         (2, "Job")
     )
-    reference_id=models.AutoField(primary_key=True)
+    reference_id=models.PositiveSmallIntegerField(primary_key=True,default=1)
     form_template=models.PositiveSmallIntegerField(choices=template_choice,default=1)
     created_by=models.CharField(max_length=32)
     created_on=models.DateField(auto_now_add=True)
@@ -276,6 +274,5 @@ class AddressRef(models.Model):
     add_type_id= models.PositiveSmallIntegerField()
     add_desc=models.CharField(max_length=32)
     created_on=models.DateField(auto_now_add=True)
-
 
 
