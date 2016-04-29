@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .forms import PersonForm, EducationForm, AddressForm, ProgramForm, WorkForm, PostForm, validationForm, adminForm
 from module1.models import SignUp, MatchRef
+from staffmodule.models import AdminReference
 from django.http import HttpResponsePermanentRedirect
 from django.http import HttpResponse
 
@@ -11,18 +12,26 @@ def main(request):
 	if result is "Invalid":
 		return HttpResponsePermanentRedirect("/login/")
 
+	entries=AdminReference.objects.all()
+	if not entries:
+		form = adminForm(request.POST or None) 
+
+		if form.is_valid():
+			instance=form.save(commit=False)
+			if 'name' in request.session:
+				instance.created_by=request.session['name']
+			instance.save()
+
+		
+		context ={
+			"form":form  
+		}
+
+	else:
+		context ={
+
+		}
 	
-	form = adminForm(request.POST or None) 
-
-	if form.is_valid():
-		instance=form.save(commit=False)
-		if 'name' in request.session:
-			instance.created_by=request.session['name']
-		instance.save()
-
-	context ={
-		"form":form   
-	}
 
 	return render(request,"admin_page.html",context)
 
