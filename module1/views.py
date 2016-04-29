@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 # Create your views here.
 def sign(request):
 	title= "IIITB"
+	title2= "User Login"
 
 	#adding a form
 	form= SignUpForm(request.POST or None)   #so that validations are done when POST, None so that initially no validations show up
@@ -14,24 +15,31 @@ def sign(request):
 	if form.is_valid():
 		instance=form.save(commit=False)
 		instance.save()
-		return render(request,"success.html",{})
+
+		context ={
+		"title2":title2, 
+		}
+		return render(request,"success.html",context)
 
 
 	context ={
 		"title":title,        #template context variable and value
-		"form":form
+		"form":form,
+		"title2":title2,
 
 	}
 	return render(request,"sign.html",context)
 
 def login1(request):
 	title= "IIITB Login Portal"
+	title2= "SignUp"
 	#adding a form
 	form= login(request.POST or None)   #so that validations are done when POST, None so that initially no validations show up
 	#print msg
 	context ={		
 		"title":title,        #template context variable and value
 		"form":form,
+		"title2":title2,
 	}
 	if form.is_valid():
 		instance=form.save(commit=False)
