@@ -2,14 +2,35 @@
 <!--{% extends "masterpage_candidate.html" %}-->
 {% load static %}
 {% block content %}
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
 <div class="table-responsive">
     <br>
     <form method="POST" action=''>{% csrf_token %}
         <table class="table table-striped">
             <tr>
-            <th bgcolor="#e1e1e1"> Personal Details</th><td bgcolor="#e1e1e1"></td>
-                {{pdForm}}
+                <th bgcolor="#e1e1e1"> Personal Details</th><td bgcolor="#e1e1e1"></td>
+
             </tr>
+            {% for field in pdForm %}
+            {%ifnotequal field.label 'hidden'%}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                <td>
+                    {{field.errors}}
+                    {{ field }}
+                    {%if field.help_text %}
+                    <a href="#" data-toggle="tooltip" data-placement="right" title="{{ field.help_text}}">?</a>
+                    {%endif%}
+                </td>
+            </tr>
+            {%endifnotequal%}
+            {%endfor%}
         </table>
 
         </br>
