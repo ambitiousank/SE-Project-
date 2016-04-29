@@ -3,6 +3,11 @@
 {% load static %}
 {% block content %}
 
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 
 <div class="table-responsive">
     <br>
@@ -11,11 +16,22 @@
         <table class="table table-striped">
             <tr>
                 <th bgcolor="#e1e1e1"> Work Experience</th><td bgcolor="#e1e1e1"></td>
-               <!--<div id='roll_number' class="hidden">{{roll_number}}</div>-->
-
-                {{workExperienceForm}}
-                <!--{{address}}-->
             </tr>
+
+            {% for field in workExperienceForm %}
+            {%ifnotequal field.label 'hidden'%}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                <td>
+                    {{field.errors}}
+                    {{ field }}
+                    {%if field.help_text %}
+                    <a href="#" data-toggle="tooltip" data-placement="right" title="{{ field.help_text}}">?</a>
+                    {%endif%}
+                </td>
+            </tr>
+            {%endifnotequal%}
+            {%endfor%}
         </table>
         <input type= "hidden" name='roll_number' value="{{roll_number}}" />
         </br>
