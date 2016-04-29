@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db import transaction
 from django import forms
 from django.http import HttpResponseRedirect
+from django.http import HttpResponsePermanentRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 
@@ -67,6 +68,10 @@ html page. A candidate can verify how his/her information will look once the for
 
 """
 def homeView(request,roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
 
     title="Candidate Details "
     context={"status":status, "title":title, "roll_number": roll_number}
@@ -175,6 +180,10 @@ def homeView(request,roll_number):
 
 def fileUploadView(request,roll_number):
 
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
 
     title= "File Upload List"
     context={
@@ -187,6 +196,10 @@ def fileUploadView(request,roll_number):
 
 
 def fileDetailsView(request,upload_doc,roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
 
     if upload_doc=="photo":
         uploaded_doc='Photograph'
@@ -276,6 +289,10 @@ def fileDetailsView(request,upload_doc,roll_number):
 
 def jobDetailsView(request, roll_number):
 
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
     title = "Program Applying For"
     jobDetailEntry=PostApplied.objects.filter(roll_number=roll_number)
 
@@ -320,6 +337,11 @@ def jobDetailsView(request, roll_number):
 
 
 def personalDetailsView(request, roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
 
     title = "Candidate Personal Details"
     context={"form_template":form_template,
@@ -408,6 +430,11 @@ def personalDetailsView(request, roll_number):
 
 def addressDetailsView(request,roll_number):
 
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
+
     title= "Address List"
     context={
         "title" : title,
@@ -421,6 +448,11 @@ def addressDetailsView(request,roll_number):
 
 
 def addressView(request,id,roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
 
     title="Address Details"
     if id == 'per':
@@ -499,6 +531,11 @@ def addressView(request,id,roll_number):
 
 def updateAddressInPersonalDetails(roll_number,address_type):
 
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
+
 
     print "<<<addressType>> >"
     print address_type
@@ -533,6 +570,12 @@ def updateAddressInPersonalDetails(roll_number,address_type):
 
 
 def programDetailsView(request, roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
+
     title = "Program Applying For"
     programDetailEntry=ProgramApplied.objects.filter(roll_number=roll_number)
 
@@ -603,6 +646,12 @@ def programDetailsView(request, roll_number):
 
 
 def workExperienceView(request, roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
+
     title = "Candidate Work Experience"
     workExperienceEntry=None
 
@@ -672,6 +721,12 @@ def workExperienceView(request, roll_number):
 
 
 def educationDetailsView(request,roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
+
     title= "Education Details"
     context={
         "title" : title,
@@ -683,6 +738,10 @@ def educationDetailsView(request,roll_number):
 
 
 def stdEducationDetailsView(request, id, roll_number):
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
 
     type=int(id)
     stdEntry=EducationRef.objects.get(education_id=type)
@@ -748,6 +807,11 @@ def stdEducationDetailsView(request, id, roll_number):
 
 
 def submitView(request, roll_number):
+
+    result=validateSession(request)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/login/")
+
     try:
         subStatus = SubmitStatus.objects.get(roll_number=roll_number)
         submission_status = subStatus.submission_status
@@ -1020,4 +1084,29 @@ def submitView(request, roll_number):
 
         return HttpResponseRedirect("/candidate_home/"+roll_number+"/")
     return render(request, "candidate_submit.html", context)
+
+
+
+#to handle session on logout
+def validateSession(request):
+    stringName="User"
+    userString="User"
+    try:
+
+        temp=request.session['role']
+        stringName=str(temp)
+
+        print "String name is"
+        print stringName
+    #get it from context
+        if stringName == userString:
+            print "Valid"
+            return "Valid"
+        else:
+            print "Invalid"
+            return "Invalid" 
+    except:
+            print "Error"
+            return "Invalid"
+
 
