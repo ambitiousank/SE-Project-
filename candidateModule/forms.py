@@ -32,8 +32,8 @@ class PersonalDetailForm(forms.ModelForm):
 
 class AddressDetailForm(forms.ModelForm):
 
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
-	address_type=forms.CharField(widget = forms.HiddenInput(),required= False)
+	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False,label="hidden")
+	address_type=forms.CharField(widget = forms.HiddenInput(),required= False,label="hidden")
 	class Meta:
 		model=AddressDetails
 		fields= ["address_type",
@@ -49,7 +49,7 @@ class AddressDetailForm(forms.ModelForm):
 
 
 class WorkExperienceForm (forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
+	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False,label="hidden")
 	class Meta:
 		model = WorkExperience
 		fields = ["roll_number",
@@ -76,8 +76,7 @@ class WorkExperienceForm (forms.ModelForm):
 
 
 class ProgramDetailForm (forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
-
+	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False,label="hidden")
 	class Meta:
 		model = ProgramApplied
 		fields = [#"education_type",
@@ -92,8 +91,8 @@ class ProgramDetailForm (forms.ModelForm):
 
 
 class FormSubmissionForm(forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(),required = False)
-	submission_status=forms.IntegerField(widget = forms.HiddenInput(), required = False)
+	roll_number=forms.CharField(widget = forms.HiddenInput(),required = False,label="hidden")
+	submission_status=forms.IntegerField(widget = forms.HiddenInput(), required = False,label="hidden")
 	class Meta:
 		model=SubmitStatus
 		fields=[
@@ -103,8 +102,8 @@ class FormSubmissionForm(forms.ModelForm):
 
 
 class FileUploadForm (forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
-	upload_type=forms.Field(widget = forms.HiddenInput(), required = False)
+	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False,label="hidden")
+	upload_type=forms.Field(widget = forms.HiddenInput(), required = False,label="hidden")
 	class Meta:
 		model = UploadDetails
 		fields = [#"education_type",
@@ -140,7 +139,7 @@ class FileUploadForm (forms.ModelForm):
 
 
 class JobDetailForm (forms.ModelForm):
-	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False)
+	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False,label="hidden")
 	class Meta:
 		model = PostApplied
 		fields=["roll_number", "post"]
