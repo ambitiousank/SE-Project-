@@ -204,3 +204,10 @@ def validateSession(request):
 	except:
 			print "Error"
 			return "Invalid"
+
+
+
+def logsout(request):
+    print "logging out"
+    request.session.flush()
+    return HttpResponsePermanentRedirect("/login/")
