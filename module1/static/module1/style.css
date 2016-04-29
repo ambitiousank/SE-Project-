@@ -16,6 +16,27 @@ h2{
 	color: white;
 }
 
+.topcorner{
+  position:absolute; 
+  top:10px;
+  right:10px; 
+  font-size:20px;
+}
+
+.topcorner a{
+  color:white; 
+  background-color:transparent; 
+  color:white; 
+  text-decoration:none;
+  }
+
+  .topcorner a:hover{
+  color:white; 
+  background-color:transparent; 
+  color:white; 
+ text-decoration:underline;
+  }
+
 .login-card {
   padding: 40px;
   width: 274px;
