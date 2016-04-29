@@ -49,6 +49,7 @@ def studentValidation(request,admission_id):
 
 	student_entry=PersonalDetail.objects.get(roll_number=roll_number)
 	print student_entry.full_name
+	gender=student_entry.gender
 	if form.is_valid():
 		print "valid"
 		k= request.POST['Action']
@@ -117,7 +118,12 @@ def studentValidation(request,admission_id):
 		#print k.upload_type_id
 		#print k.upload_type_id.upload_type_desc
 		#nothing
-
+		if gender==1:
+			genderDesc="Male"
+		elif gender ==2:
+			genderDesc="Female"
+		else:
+			genderDesc="Others"
 
 
 
@@ -140,7 +146,8 @@ def studentValidation(request,admission_id):
 	"program_name":program_name,
 	"filename":"downloads/k2.pdf",
 	"filename2":"downloads/MT2015020_HIghSchool.pdf",
-	"uploadObjects":uploadObjects
+	"uploadObjects":uploadObjects,
+	"gender":genderDesc,
 
 
 
