@@ -4,7 +4,7 @@
 
           <h1 class="sub-header">System Details</h1>
           
-
+          {%if form%}                   
           <form method='POST' action=''>{% csrf_token %}   
           <div class="form-style-1">
           {{ form.as_p}}
@@ -12,6 +12,11 @@
           <input type='submit' value='Save'/>  
     		 </div>
           </form>
+
+          {%else%}
+          <p>You have already entered system details.</p>
+
+          {%endif%}
          
 
           {% endblock %}
