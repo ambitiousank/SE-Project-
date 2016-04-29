@@ -119,7 +119,7 @@ class AddressDetails(models.Model):
     address2=models.CharField(max_length=100,blank=True,help_text="for example: Opposite to Infosys gate 1")
     address3=models.CharField(max_length=100,blank=True,help_text="for example: Hosur Road")
     state=models.IntegerField(choices=STATE_CHOICES,default=0)
-    pincode=models.PositiveIntegerField(max_length=6,help_text="Six digit zip/pin code like 560100")
+    pincode=models.CharField(max_length=6,help_text="Six digit zip/pin code like 560100")
     city=models.CharField(max_length=50,help_text="for example: Bangalore")
 
 class PersonalDetail(models.Model):
