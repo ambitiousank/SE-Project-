@@ -10,15 +10,19 @@ class SignUpForm(forms.ModelForm):
 
 
 	def clean_email(self):
-		'''	print self.cleaned_data    #or cleaned_data.get('email')   prints cleaned data(a dictionary) in console
-		return "abc@gmail.com"      #returns this to the field on the module	 '''
-
 		email=self.cleaned_data.get('email')
 		email_base,provider= email.split("@")
+
+		entries=SignUp.objects.filter(email=email)
+				
 		#domain, extension= provider.split('.')
 		if not  ( provider == "iiitb.org" or provider == "iiitb.ac.in" ):
 			raise forms.ValidationError("Please use your iiitb email")
+		elif len(entries)>0:
+			raise forms.ValidationError("This email has already been registered.")
 		return email
+
+		
 
 
 	def clean(self):
