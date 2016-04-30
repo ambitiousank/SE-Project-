@@ -531,9 +531,9 @@ def addressView(request,id,roll_number):
 
 def updateAddressInPersonalDetails(roll_number,address_type):
 
-    result=validateSession(request)
-    if result is "Invalid":
-        return HttpResponsePermanentRedirect("/login/")
+    #result=validateSession(request)
+    #if result is "Invalid":
+    #    return HttpResponsePermanentRedirect("/login/")
 
 
 
