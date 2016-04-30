@@ -36,9 +36,7 @@
 Created On
 </th>
 
-<th>
- status
-</th>
+
 
 </tr>
 {% for i in searchs %}
@@ -53,11 +51,7 @@ Created On
 <td>
 {{i.created_on}}
 </td>
-{%ifequal i.status_of_request 1 %}
-    <td>Pending </td>
-{% else %}
-   <td>Incompelete </td>
-{% endifequal %}
+
 </tr>
 	{% endfor %} 
 </table>
