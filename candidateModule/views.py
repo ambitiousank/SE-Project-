@@ -14,6 +14,7 @@ from staffmodule.models import AdmissionDetail,PersonalDetail,EducationDetails, 
     AddressDetails,WorkExperience,ProgramApplied,ExamRef,CourseRef, \
     ExamSubjectRef,CategoryRef,StateRef,ProgramRef,UploadDetails, \
     AdminReference,PostApplied,User,SubmitStatus,AddressRef,UploadTypeRef,PostRef,EducationRef
+from module1.models import MatchRef
 
 import os
 
@@ -68,6 +69,9 @@ html page. A candidate can verify how his/her information will look once the for
 
 """
 def homeView(request,roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -105,14 +109,19 @@ def homeView(request,roll_number):
             pass
         try:
             permanentAddress=AddressDetails.objects.get(roll_number=roll_number,address_type=PERMANENT_ADDRESS_TYPE)
-            context.update({"permanent_address":permanentAddress})
+            stateRef=StateRef.objects.get(state_id=permanentAddress.state)
+            perState=stateRef.state_desc    
+            context.update({"permanent_address":permanentAddress,"per_state":perState})
         except ObjectDoesNotExist:
             pass
         try:
             currentAddress=AddressDetails.objects.get(roll_number=roll_number,address_type=CURRENT_ADDRESS_TYPE)
-            context.update({"current_address":currentAddress})
+            stateRef=StateRef.objects.get(state_id=currentAddress.state)
+            curState=stateRef.state_desc    
+            context.update({"current_address":currentAddress,"cur_state":curState})
         except ObjectDoesNotExist:
             pass
+            
         work_experience=WorkExperience.objects.filter(roll_number=roll_number)
 
         context.update({"work_ex":work_experience})
@@ -179,6 +188,9 @@ def homeView(request,roll_number):
 
 
 def fileUploadView(request,roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -196,6 +208,9 @@ def fileUploadView(request,roll_number):
 
 
 def fileDetailsView(request,upload_doc,roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -288,6 +303,9 @@ def fileDetailsView(request,upload_doc,roll_number):
     return render(request, "candidate_file_details.html",  context)
 
 def jobDetailsView(request, roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -337,6 +355,9 @@ def jobDetailsView(request, roll_number):
 
 
 def personalDetailsView(request, roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -429,6 +450,9 @@ def personalDetailsView(request, roll_number):
 
 
 def addressDetailsView(request,roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -448,6 +472,9 @@ def addressDetailsView(request,roll_number):
 
 
 def addressView(request,id,roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -570,6 +597,9 @@ def updateAddressInPersonalDetails(roll_number,address_type):
 
 
 def programDetailsView(request, roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -646,6 +676,9 @@ def programDetailsView(request, roll_number):
 
 
 def workExperienceView(request, roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -721,6 +754,9 @@ def workExperienceView(request, roll_number):
 
 
 def educationDetailsView(request,roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -738,6 +774,10 @@ def educationDetailsView(request,roll_number):
 
 
 def stdEducationDetailsView(request, id, roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
+
     result=validateSession(request)
     if result is "Invalid":
         return HttpResponsePermanentRedirect("/login/")
@@ -807,6 +847,9 @@ def stdEducationDetailsView(request, id, roll_number):
 
 
 def submitView(request, roll_number):
+    result=validateUser(request,roll_number)
+    if result is "Invalid":
+        return HttpResponsePermanentRedirect("/logsout/")
 
     result=validateSession(request)
     if result is "Invalid":
@@ -976,7 +1019,7 @@ def submitView(request, roll_number):
             UploadDetails.objects.get(roll_number=roll_number,upload_type=X_CERTIFICATE)
         except ObjectDoesNotExist:
             validationError=1;
-            errorMessage +="\r\n>> upload Files:   Xth Certificcate"
+            errorMessage +="\r\n>> upload Files:   Xth Certificate"
         else:
             pass
 
@@ -1108,5 +1151,24 @@ def validateSession(request):
     except:
             print "Error"
             return "Invalid"
+
+def validateUser(request,roll_number):
+    try:
+        print roll_number
+        temp=request.session['email']
+        print temp
+        match=MatchRef.objects.get(email=temp)
+        roll_no=match.roll_no
+        if(roll_no==roll_number):
+            print "success"
+            return "Valid"
+
+        else:
+            return "Invalid"
+
+
+    except:
+        print "exception"
+        return "Invalid"
 
 
