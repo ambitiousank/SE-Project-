@@ -54,10 +54,16 @@ def login1(request):
 		else:	
 			request.session['role']=entry.values_list('role')[0][0]	
 			request.session['name']=entry.values_list('name')[0][0]	
-			name= entry.values_list('name')[0][0]		
+			request.session['email']=entry.values_list('email')[0][0]	
+			email=entry.values_list('email')[0][0]
+			name= entry.values_list('name')[0][0]	
+			print 'k'
+			print name
+			print email	
 			context ={
 				"role":instance.role,
-				"title":name,        #template context variable and value
+				"title":name,
+				"email":email,       #template context variable and value
 				}
 			#extracting roll number
 			if instance.role=='Staff':
