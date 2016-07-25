@@ -163,7 +163,7 @@ class EducationDetails(models.Model):
     education_id=models.AutoField(primary_key=True)
     roll_number=models.CharField(max_length=32)
     education_type=models.IntegerField(choices=EDUCATION_CHOICES, default=1)
-    percentage=models.DecimalField(max_digits=4,decimal_places=2,help_text="Upto two decimal places (like 74.20)")
+    percentage=models.DecimalField(max_digits=5,decimal_places=2,help_text="Upto two decimal places (like 74.20)")
     board_university=models.CharField(max_length=32,help_text="Name of university or board")
     institute=models.CharField(max_length=32,help_text="Name of the institute")
     year_of_passing=models.IntegerField(default=2000)
