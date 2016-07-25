@@ -7,6 +7,8 @@ import os
 
 
 class PersonalDetailForm(forms.ModelForm):
+	date_of_birth = forms.DateField(label='date_of_birth', input_formats=['%Y-%m-%d'],help_text="format yyyy-mm-dd (like 2000-12-19)")
+	
 	class Meta:
 		model = PersonalDetail
 		fields = [ #"roll_number",
@@ -21,15 +23,14 @@ class PersonalDetailForm(forms.ModelForm):
 			"pan_card",
 			"email_id"]
 
-	def clean_email(self):
-		email = self.cleaned_data.get('email')
+	def clean_email_id(self):
+		email = self.cleaned_data.get('email_id')
 		email_base, provider = email.split("@")
 		if not (provider == "iiitb.org" or provider == "iiitb.ac.in") :
 			raise forms.ValidationError("Please use your iiitb email id")
 		return email
 
-
-
+	
 class AddressDetailForm(forms.ModelForm):
 
 	roll_number=forms.CharField(widget = forms.HiddenInput(), required = False,label="hidden")
@@ -61,16 +62,19 @@ class WorkExperienceForm (forms.ModelForm):
 				  "duration"
 				  ]
 
-		def clean(self):
-			start_year=self.cleaned_data.get("start_year")
-			end_year=self.cleaned_data.get("end_year")
-			duration=self.cleaned_data.get("duration")
-			diff= end_year - start_year
-			if(diff < 0):
-				raise forms.ValidationError("Please check start year and end year. start year can't have a lower value than end year ")
-			elif (duration <0 or duration > (diff*12+12)):
-				raise forms.ValidationError("Please re-check duration (value should be in months)")
-			return self
+	def clean_duration(self):
+		start_year=self.cleaned_data.get("start_year")
+		end_year=self.cleaned_data.get("end_year")
+		duration=self.cleaned_data.get("duration")
+		diff= end_year - start_year
+		lastOrg=self.cleaned_data.get("last_organisation")		
+		if lastOrg.lower() == "na":
+			pass 
+		elif (diff < 0):
+			raise forms.ValidationError("Please check start year and end year. Start year can't be come after End year ")
+		elif (duration <0 or duration > (diff*12+12)):
+			raise forms.ValidationError("Please re-check duration (value should be in months)")
+		return duration
 
 
 
@@ -160,7 +164,6 @@ class EducationalDetailForm (forms.ModelForm):
 		if (percentage < 0 or percentage >100):
 			raise forms.ValidationError("Please correct the percentage (0-100 is the valid range)")
 		return percentage
-
 
 
 
